@@ -174,7 +174,7 @@ namespace Clustering { // I discoved the need to add this after I had written al
         os << "Point " << inPoint << ":";
         for (int x = 0; x < inPoint.dim; x++)
             os << inPoint.values[x] << ",";
-
+        os<<std::endl;
         return os;
     }
 

@@ -72,4 +72,52 @@ namespace Clustering
         }
         delete subsequent;
     }
+
+    void Cluster::add(PointPtr const &inPoint)
+    {
+        LNodePtr seeker=head, trailer=head;
+        if(size==0)//if cluster not currently empty
+            while(seeker->p<inPoint&&seeker->next!= nullptr)//seek to appropriate spot
+            {
+            trailer =seeker;
+            seeker=seeker->next;
+            }
+        trailer->next=new LNode;
+        trailer = trailer->next;
+        trailer->next=seeker;
+        size++;
+
+    }
+
+    const PointPtr &Cluster::remove(PointPtr const &target)
+    {
+        LNodePtr seeker=head, trailer;
+        if(size==0)
+            return target; //return target if cluster empty
+        while(seeker->p!=target&&seeker->next!= nullptr)
+        {
+            trailer =seeker;
+            seeker=seeker->next;
+        }
+        if(seeker->p==target)
+        {
+            trailer->next=seeker->next;
+            delete seeker;
+        }
+        return target;
+    }
+
+    std::ostream &operator<<(std::ostream &os, const Cluster &cluster)
+    {
+        if(size==0)
+            return os;
+        LNodePtr seeker=head;
+        while(seeker->next!= nullptr)
+        {
+            os<<seeker->p
+        }
+        return <#initializer#>;
+    }
+
+
 }
