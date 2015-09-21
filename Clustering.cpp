@@ -103,6 +103,7 @@ namespace Clustering
         {
             trailer->next=seeker->next;
             delete seeker;
+            size--;
         }
         return target;
     }
@@ -120,8 +121,20 @@ namespace Clustering
         {
             os<<seeker->p;
         }
-        return <#initializer#>;
+        os<<std::endl;
+        return os;
     }
 
 
+    bool Clustering::operator==(const Cluster &lhs, const Cluster &rhs)
+    {
+        if(lhs.size==0&&rhs.size==0)
+            return true;
+        LNodePtr LSeeker=lhs.head;
+        LNodePtr rSeeker=rhs.head;
+
+
+
+        return false;
+    }
 }
