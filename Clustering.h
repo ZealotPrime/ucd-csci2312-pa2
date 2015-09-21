@@ -12,8 +12,6 @@ namespace Clustering {
     typedef Point *PointPtr;
     typedef struct LNode *LNodePtr;
 
-//    struct LNode;
-//    typedef LNode *LNodePtr;
 
     struct LNode {
         PointPtr p;
@@ -22,10 +20,10 @@ namespace Clustering {
 
     class Cluster {
         int size;
-        LNodePtr points;
+        LNodePtr head;
 
     public:
-        Cluster() : size(0), points(nullptr) {};
+        Cluster() : size(0), head(nullptr) {};
 
         // The big three: cpy ctor, overloaded operator=, dtor
         Cluster(const Cluster &);
