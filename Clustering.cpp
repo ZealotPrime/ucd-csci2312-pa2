@@ -109,12 +109,12 @@ namespace Clustering
 
     std::ostream &operator<<(std::ostream &os, const Cluster &cluster)
     {
-        if(size==0)
+        if(cluster.size==0)
             return os;
         LNodePtr seeker=head;
         while(seeker->next!= nullptr)
         {
-            os<<seeker->p
+            os<<seeker->p;
         }
         return <#initializer#>;
     }
