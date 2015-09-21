@@ -130,10 +130,10 @@ namespace Clustering
     {
         if(lhs.size==0&&rhs.size==0)
             return true;
-        LNodePtr LSeeker=lhs.head;
+        LNodePtr lSeeker=lhs.head;
         LNodePtr rSeeker=rhs.head;
-
-
+        std::size_t counter=0;
+        while(lSeeker->p!= nullptr&&rSeeker!= nullptr)
 
         return false;
     }
