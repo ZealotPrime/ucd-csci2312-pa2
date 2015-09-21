@@ -129,12 +129,71 @@ namespace Clustering
     bool Clustering::operator==(const Cluster &lhs, const Cluster &rhs)
     {
         if(lhs.size==0&&rhs.size==0)
-            return true;
+            return true;//clusters equal if they're both empty
         LNodePtr lSeeker=lhs.head;
         LNodePtr rSeeker=rhs.head;
-        std::size_t counter=0;
+        int counter=0;
         while(lSeeker->p!= nullptr&&rSeeker!= nullptr)
+        {
+            lSeeker=lSeeker->next;
+            rSeeker=rSeeker->next;
+            counter++;
+        }
+        if(counter==lhs.size&&counter==rhs.size&&lSeeker->p==rSeeker->p)//if testing final element and final element is the same
+            return true;//then it's equal
+        return false;//otherwise it's not
+    }
 
-        return false;
+    Cluster &Cluster::operator+=(const Cluster &rhs)
+    {
+        LNodePtr lSeeker=head;
+        LNodePtr rSeeker=rhs.head;
+        int y;
+        for(int x=0;x<rhs.size;x++)//iterate through the rhs's points
+        {
+            for(y=0;y<size;y++)//compare against all the lhs's points
+            {
+                if(lSeeker->p==rSeeker->p)//if we found the current point in the lhs already, break out of the loop
+                    break;
+                lSeeker=lSeeker->next;
+            }
+            if(y==size)//if we didn't find it, add it.
+                add(rSeeker->p);
+            rSeeker=rSeeker->next;//check the next one for matches
+        }
+        return *this;
+    }
+
+    Cluster &Cluster::operator-=(const Cluster &rhs)
+    {
+        LNodePtr lSeeker=head;
+        LNodePtr rSeeker=rhs.head;
+        int y;
+        for(int x=0;x<rhs.size;x++)//iterate through the rhs's points
+        {
+            for(y=0;y<size;y++)//compare against all the lhs's points
+            {
+                if(lSeeker->p==rSeeker->p)//if we found the current point in the lhs and rhs, pull it from the lhs and break out of the loop
+                {
+                    remove(lSeeker->p);
+                    break;
+                }
+                lSeeker=lSeeker->next;
+            }
+            rSeeker=rSeeker->next;//check the next one for matches
+        }
+        return *this;
+    }
+
+    Cluster &Cluster::operator+=(const Point &rhs)
+    {
+        add(&rhs);
+        return *this;
+    }
+
+    Cluster &Cluster::operator-=(const Point &rhs)
+    {
+        remove(&rhs);
+        return *this;
     }
 }
