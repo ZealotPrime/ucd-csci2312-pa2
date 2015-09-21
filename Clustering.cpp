@@ -110,8 +110,12 @@ namespace Clustering
     std::ostream &operator<<(std::ostream &os, const Cluster &cluster)
     {
         if(cluster.size==0)
+        {
+            os<<"Cluster "<<cluster<<" is empty"<<std::endl;
             return os;
+        }
         LNodePtr seeker=head;
+        os<<"Cluster "<<cluster<<" contains: ";
         while(seeker->next!= nullptr)
         {
             os<<seeker->p;
