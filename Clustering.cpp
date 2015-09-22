@@ -73,7 +73,7 @@ namespace Clustering
         delete subsequent;
     }
 
-    void Cluster::add(PointPtr const &inPoint)
+    void Cluster::add(const PointPtr &inPoint)
     {
         LNodePtr seeker=head, trailer=head;
         if(size==0)//if cluster not currently empty
@@ -89,7 +89,7 @@ namespace Clustering
 
     }
 
-    const PointPtr &Cluster::remove(PointPtr const &target)
+    const PointPtr &Cluster::remove(const PointPtr &target)
     {
         LNodePtr seeker=head, trailer;
         if(size==0)
@@ -115,7 +115,7 @@ namespace Clustering
             os<<"Cluster "<<cluster<<" is empty"<<std::endl;
             return os;
         }
-        LNodePtr seeker=head;
+        LNodePtr seeker=cluster.head;
         os<<"Cluster "<<cluster<<" contains: ";
         while(seeker->next!= nullptr)
         {
@@ -126,7 +126,7 @@ namespace Clustering
     }
 
 
-    bool Clustering::operator==(const Cluster &lhs, const Cluster &rhs)
+    bool operator==(const Cluster &lhs, const Cluster &rhs)
     {
         if(lhs.size==0&&rhs.size==0)
             return true;//clusters equal if they're both empty
@@ -185,15 +185,54 @@ namespace Clustering
         return *this;
     }
 
-    Cluster &Cluster::operator+=(const Point &rhs)
+    Cluster &Cluster::operator+=(const PointPtr &rhs)
     {
-        add(&rhs);
+        add(rhs);
         return *this;
     }
 
-    Cluster &Cluster::operator-=(const Point &rhs)
+    Cluster &Cluster::operator-=(const PointPtr &rhs)
     {
-        remove(&rhs);
+        remove(rhs);
         return *this;
+    }
+
+    const Cluster operator+(const Cluster &lhs, const Cluster &rhs) //as per the header file, this will duplicate points, unlike the += operator
+    {
+        Cluster output;
+        LNodePtr seeker=lhs.head;
+        for(int x=0;x<lhs.size;x++)//add all points from lhs
+        {
+            output.add(seeker->p);
+            seeker=seeker->next;
+        }
+        seeker=rhs.head;
+        for(int x=0;x<rhs.size;x++)//add all points from rhs
+        {
+            output.add(seeker->p);
+            seeker=seeker->next;
+        }
+        return output;
+    }
+
+    const Cluster operator-(const Cluster &lhs, const Cluster &rhs)
+    {
+        Cluster output(lhs);
+        output-=rhs;
+        return output;
+    }
+
+    const Cluster operator+(const Cluster &lhs, const PointPtr &rhs)
+    {
+        Cluster output(lhs);
+        output.add(rhs);
+        return lhs;
+    }
+
+    const Cluster operator-(const Cluster &lhs, const PointPtr &rhs)
+    {
+        Cluster output(lhs);
+        output.remove(rhs);
+        return lhs;
     }
 }

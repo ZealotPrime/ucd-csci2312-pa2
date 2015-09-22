@@ -48,8 +48,8 @@ namespace Clustering {
         Cluster &operator+=(const Cluster &rhs); // union
         Cluster &operator-=(const Cluster &rhs); // (asymmetric) difference
 
-        Cluster &operator+=(const Point &rhs); // add point
-        Cluster &operator-=(const Point &rhs); // remove point
+        Cluster &operator+=(const PointPtr &rhs); // add point
+        Cluster &operator-=(const PointPtr &rhs); // remove point
 
         // Set-destructive operators (duplicate points in the space)
         // - Friends

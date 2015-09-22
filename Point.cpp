@@ -89,7 +89,7 @@ const Clustering::Point Clustering::Point::operator/(double modifier) const
     return outPoint;
 }
 
-namespace Clustering { // I discoved the need to add this after I had written all the functions, thus the needless scope operators
+namespace Clustering { // I discovered the need to add this after I had written all the functions, thus the needless scope operators
     Clustering::Point &operator+=(Clustering::Point &lhs, const Clustering::Point &rhs) {
         for (int x = 0; x < rhs.dim; x++)
             lhs.values[x] += rhs.values[x];
@@ -171,7 +171,7 @@ namespace Clustering { // I discoved the need to add this after I had written al
     }
 
     std::ostream &operator<<(std::ostream &os, const Clustering::Point &inPoint) {
-        os << "Point " << inPoint << ":";
+        os << "Point " << (&inPoint) << ":";
         for (int x = 0; x < inPoint.dim; x++)
             os << inPoint.values[x] << ",";
         os<<std::endl;
