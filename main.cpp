@@ -1,9 +1,10 @@
 #include <iostream>
 #include "Point.h"
+#include "Clustering.h"
 
 using namespace std;
 
-void basicPointOps()
+void pointTester()
 {
     Clustering::Point testPoint(3);
     Clustering::Point testPoint2(3);
@@ -72,7 +73,7 @@ void basicPointOps()
     cout<<endl<<"subtract them :"<<testPoint-testPoint2<<endl;
 
     cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
-    cin>>testPoint2;
+    //cin>>testPoint2;
     cout<<"point is now "<<testPoint2;
 
     cout<<"Testing comparators again with new values"<<endl;
@@ -85,11 +86,26 @@ void basicPointOps()
     if(testPoint<=testPoint2)
         cout<<"Test point 2 greater or equal"<<endl;
 
+}//end point tester
 
+void clusterTester()
+{
+    double set1[]={1,2,3};
+    double set2[]={5,6,7};
+    Clustering::Point p1(3,set1);
+    Clustering::Point p2(3,set2);
+    Clustering::Cluster c1;
+
+    cout<<c1<<endl;
+    cout<<"Adding a new point to c1 cluster"<<endl;
+    c1.add(&p1);
+    cout<<c1<<endl;
 
 }
 
+
 int main() {
-    basicPointOps();
+    pointTester();
+    clusterTester();
     return 0;
 }
