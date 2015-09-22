@@ -16,27 +16,75 @@ void basicPointOps()
     testPoint2.setValue(1,2);
     testPoint2.setValue(2,3);
 
-    cout<<testPoint<<endl;
+    cout<<"two equal points created"<<endl;
+
+    cout<<testPoint<<endl;//print test
     cout<<testPoint2<<endl;
 
+    cout<<endl<<"test for equality when equal"<<endl;
     if(testPoint==testPoint2)
         cout<<"Points are equal"<<endl;
     if(testPoint!=testPoint2)
         cout<<"Points are not equal"<<endl;
 
+    cout<<endl<<"point2 added to point 1"<<endl;
     testPoint+=testPoint2;
-
     cout<<testPoint<<endl;
     cout<<testPoint2<<endl;
+
+    cout<<endl<<"get value of testpoint[3]"<<endl;
+    cout<<testPoint[3]<<endl;
+
+    cout<<endl<<"test for equality when not equal"<<endl;
     if(testPoint==testPoint2)
         cout<<"Points are equal"<<endl;
     if(testPoint!=testPoint2)
         cout<<"Points are not equal"<<endl;
 
-    testPoint2*=2;
+    cout<<endl<<"multiply then divide testpoint2 by 2"<<endl;
+    testPoint2*=2;//test mult/div ops
     cout<<testPoint2<<endl;
     testPoint2/=2;
     cout<<testPoint2<<endl;
+
+    cout<<endl<<"test comparators when not equal"<<endl;
+    if(testPoint>testPoint2)
+        cout<<"Test point greater"<<endl;
+    if(testPoint<testPoint2)
+        cout<<"Test point 2 greater"<<endl;
+    if(testPoint>=testPoint2)
+        cout<<"Test point greater or equal"<<endl;
+    if(testPoint<=testPoint2)
+        cout<<"Test point 2 greater or equal"<<endl;
+
+    cout<<endl<<"make them equal again and test comparators again"<<endl;
+    testPoint-=testPoint2;
+    if(testPoint>testPoint2)//test comparators when equal
+        cout<<"Test point greater"<<endl;
+    if(testPoint<testPoint2)
+        cout<<"Test point 2 greater"<<endl;
+    if(testPoint>=testPoint2)
+        cout<<"Test point greater or equal"<<endl;
+    if(testPoint<=testPoint2)
+        cout<<"Test point 2 greater or equal"<<endl;
+
+    cout<<endl<<"Add them together :"<<testPoint+testPoint2<<endl;
+    cout<<endl<<"subtract them :"<<testPoint-testPoint2<<endl;
+
+    cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
+    cin>>testPoint2;
+    cout<<"point is now "<<testPoint2;
+
+    cout<<"Testing comparators again with new values"<<endl;
+    if(testPoint>testPoint2)
+        cout<<"Test point greater"<<endl;
+    if(testPoint<testPoint2)
+        cout<<"Test point 2 greater"<<endl;
+    if(testPoint>=testPoint2)
+        cout<<"Test point greater or equal"<<endl;
+    if(testPoint<=testPoint2)
+        cout<<"Test point 2 greater or equal"<<endl;
+
 
 
 }
