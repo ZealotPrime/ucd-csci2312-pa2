@@ -83,7 +83,7 @@ namespace Clustering
             seeker=seeker->next;
             }
         trailer->next=new LNode;
-        trailer->next->p=new Point(*inPoint);
+        trailer->next->p=inPoint;
         size++;
 
     }

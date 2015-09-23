@@ -92,13 +92,13 @@ void clusterTester()
 {
     double set1[]={1,2,3};
     double set2[]={5,6,7};
-    Clustering::Point p1(3,set1);
-    Clustering::Point p2(3,set2);
+    Clustering::PointPtr p1=new Clustering::Point(3,set1);
+    Clustering::PointPtr p2=new Clustering::Point(3,set2);
     Clustering::Cluster c1;
 
     cout<<c1<<endl;
     cout<<"Adding a new point to c1 cluster"<<endl;
-    c1.add(&p1);
+    c1.add(p1);
     cout<<c1<<endl;
 
 }
