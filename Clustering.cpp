@@ -76,15 +76,17 @@ namespace Clustering
     void Cluster::add(const PointPtr &inPoint)
     {
         LNodePtr seeker=head, trailer=head;
-        if(size!=0)//if cluster not currently empty
-            while(seeker->p<seeker->next->p&&seeker->next!= nullptr)//seek to appropriate spot
+        if(size==0)//if cluster not currently empty
+            seeker=new LNode;
+        else
+            while(seeker->next!= nullptr&&seeker->p<seeker->next->p)//seek to appropriate spot
             {
             trailer =seeker;
             seeker=seeker->next;
             }
         trailer->next=new LNode;
-        trailer->next->p=inPoint;
-        trailer->next->next=seeker;
+        //trailer->next->p=inPoint;
+        //trailer->next->next=seeker;
         size++;
 
     }
