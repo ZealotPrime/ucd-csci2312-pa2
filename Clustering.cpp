@@ -77,13 +77,14 @@ namespace Clustering
     {
         LNodePtr seeker=head, trailer=head;
         if(size!=0)//if cluster not currently empty
-            for(int x=0;x<size;x++)//seek to appropriate spot
+            while(seeker->p<seeker->next->p&&seeker->next!= nullptr)//seek to appropriate spot
             {
             trailer =seeker;
             seeker=seeker->next;
             }
         trailer->next=new LNode;
         trailer->next->p=inPoint;
+        trailer->next->next=seeker;
         size++;
 
     }
