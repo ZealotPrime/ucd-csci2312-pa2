@@ -78,7 +78,7 @@ namespace Clustering
         LNodePtr seeker=head, newNode=new LNode;
         newNode->next= nullptr;
         newNode->p=inPoint;
-        if(size==0)//if cluster not currently empty
+        if(size==0)//if cluster currently empty
         {
             head=newNode;
             size++;
@@ -94,6 +94,10 @@ namespace Clustering
             }
             seeker=seeker->next;
         }
+        if(seeker->next== nullptr)
+        {
+            seeker->next=newNode;
+        }
 
         size++;
 
@@ -101,7 +105,7 @@ namespace Clustering
 
     const PointPtr &Cluster::remove(const PointPtr &target)
     {
-        LNodePtr seeker=head, trailer;
+        LNodePtr seeker=head, trailer=head;
         if(size==0)
             return target; //return target if cluster empty
         while(seeker->p!=target&&seeker->next!= nullptr)
@@ -112,6 +116,8 @@ namespace Clustering
         if(seeker->p==target)
         {
             trailer->next=seeker->next;
+            if(seeker==head)
+               head=seeker->next;
             delete seeker;
             size--;
         }
@@ -129,8 +135,9 @@ namespace Clustering
         os<<"Cluster "<<(&cluster)<<" contains: ";
         do
         {
-            os<< &seeker->p;
-        }while(seeker->next!= nullptr);
+            os<< &seeker->p<<",";
+            seeker=seeker->next;
+        }while(seeker!= nullptr);
         os<<std::endl;
         return os;
     }

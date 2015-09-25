@@ -90,33 +90,38 @@ const Clustering::Point Clustering::Point::operator/(double modifier) const
 }
 
 namespace Clustering { // I discovered the need to add this after I had written all the functions, thus the needless scope operators
-    Clustering::Point &operator+=(Clustering::Point &lhs, const Clustering::Point &rhs) {
+    Clustering::Point &operator+=(Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
             lhs.values[x] += rhs.values[x];
         return lhs;
     }
 
-    Clustering::Point &operator-=(Clustering::Point &lhs, const Clustering::Point &rhs) {
+    Clustering::Point &operator-=(Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
             lhs.values[x] -= rhs.values[x];
         return lhs;
     }
 
-    const Clustering::Point operator+(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    const Clustering::Point operator+(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         Clustering::Point outPoint(lhs);
         for (int x = 0; x < rhs.dim; x++)
             outPoint.values[x] += rhs.values[x];
         return outPoint;
     }
 
-    const Clustering::Point operator-(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    const Clustering::Point operator-(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         Clustering::Point outPoint(lhs);
         for (int x = 0; x < rhs.dim; x++)
             outPoint.values[x] -= rhs.values[x];
         return outPoint;
     }
 
-    bool operator==(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator==(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
             if (lhs.values[x] != rhs.values[x])
                 return false;
@@ -131,7 +136,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
     }
 
     bool operator<(const Clustering::Point &lhs, const Clustering::Point &rhs) {
-        for (int x = 0; x < rhs.dim; x++) {
+        for (int x = 0; x < rhs.dim; x++)
+        {
             if (lhs.values[x] < rhs.values[x])
                 return true;
             if (lhs.values[x] > rhs.values[x])
@@ -141,7 +147,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
     }
 
     bool operator>(const Clustering::Point &lhs, const Clustering::Point &rhs) {
-        for (int x = 0; x < rhs.dim; x++) {
+        for (int x = 0; x < rhs.dim; x++)
+        {
             if (lhs.values[x] > rhs.values[x])
                 return true;
             if (lhs.values[x] < rhs.values[x])
@@ -151,8 +158,9 @@ namespace Clustering { // I discovered the need to add this after I had written 
     }
 
     bool operator<=(const Clustering::Point &lhs, const Clustering::Point &rhs) {
-        for (int x = 0; x < rhs.dim; x++) {
-            if (lhs.values[x] <= rhs.values[x])
+        for (int x = 0; x < rhs.dim; x++)
+        {
+            if (lhs.values[x] < rhs.values[x])
                 return true;
             if (lhs.values[x] > rhs.values[x])
                 return false;
@@ -161,10 +169,11 @@ namespace Clustering { // I discovered the need to add this after I had written 
     }
 
     bool operator>=(const Clustering::Point &lhs, const Clustering::Point &rhs) {
-        for (int x = 0; x < rhs.dim; x++) {
-            if (lhs.values[x] >= rhs.values[x])
+        for (int x = 0; x < rhs.dim; x++)
+        {
+            if (lhs.values[x] > rhs.values[x])
                 return true;
-            if (lhs.values[x] < rhs.values[x])
+            if (lhs.values[x] <rhs.values[x])
                 return false;
         }
         return true;

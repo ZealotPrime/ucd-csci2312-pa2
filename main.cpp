@@ -59,7 +59,7 @@ void pointTester()
         cout<<"Test point 2 greater or equal"<<endl;
 
     cout<<endl<<"make them equal again and test comparators again"<<endl;
-    testPoint-=testPoint2;
+    testPoint=testPoint2;
     if(testPoint>testPoint2)//test comparators when equal
         cout<<"Test point greater"<<endl;
     if(testPoint<testPoint2)
@@ -94,12 +94,21 @@ void clusterTester()
     double set2[]={5,6,7};
     Clustering::PointPtr p1=new Clustering::Point(3,set1);
     Clustering::PointPtr p2=new Clustering::Point(3,set2);
+    Clustering::PointPtr p3=new Clustering::Point(3,set2);
+    *p3*=2;
     Clustering::Cluster c1;
 
     cout<<c1<<endl;
     cout<<"Adding a new point to c1 cluster"<<endl;
     c1.add(p1);
     cout<<c1<<endl;
+    cout<<"Adding another 2 points"<<endl;
+    c1.add(p3);
+    c1.add(p2);
+    cout<<c1;
+    cout<<"Now removing p2"<<endl;
+    c1.remove(p2);
+    cout<<c1;
 
 }
 
