@@ -72,9 +72,9 @@ void pointTester()
     cout<<endl<<"Add them together :"<<testPoint+testPoint2<<endl;
     cout<<endl<<"subtract them :"<<testPoint-testPoint2<<endl;
 
-    cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
+    //cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
     //cin>>testPoint2;
-    cout<<"point is now "<<testPoint2;
+    //cout<<"point is now "<<testPoint2;
 
     cout<<"Testing comparators again with new values"<<endl;
     if(testPoint>testPoint2)

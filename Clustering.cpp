@@ -16,13 +16,12 @@ namespace Clustering
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
     {
-        LNodePtr local,remote;
+        LNodePtr remote=inCluster.head;
         while(size>0)
         {
             remove(head->p);
         }
-        if(inCluster.size>0) {
-            remote = inCluster.head;
+        if(remote!= nullptr) {
             add(remote->p);
             while (remote->next != nullptr) {
                 remote = remote->next;
@@ -38,7 +37,7 @@ namespace Clustering
         LNodePtr current,subsequent;
         current=head;
         subsequent=current->next;
-        while(subsequent->next!= nullptr)
+        while(current->next!= nullptr)
         {
             delete current;
             current=subsequent->next;
@@ -49,45 +48,66 @@ namespace Clustering
 
     void Cluster::add(const PointPtr &inPoint)
     {
-        LNodePtr seeker=head, newNode=new LNode;
-        newNode->next= nullptr;
+        LNodePtr seeker=head, trailer=head, newNode=new LNode;
+
+        newNode->next= nullptr;//initialize new node
         newNode->p=inPoint;
-        if(size==0)//if cluster currently empty
+
+        if(size==0)//if cluster currently empty, newNode is head
         {
             head=newNode;
             size++;
             return;
         }
-        while(seeker->next!= nullptr)//seek to appropriate spot
+        if(seeker->next== nullptr)//if cluster has 1 point
         {
-            if(seeker->p<=inPoint)
+            if (seeker->p < inPoint)//put new point at end if it's bigger
             {
-                newNode->next=seeker->next;
-                seeker->next=newNode;
-                break;
+                seeker->next = newNode;
+                size++;
+                return;
             }
+            else//put it in front if it's not
+            {
+                newNode->next=head->next;
+                head=newNode;
+                return;
+            }
+        }
+        while(seeker->next!= nullptr)//seek to appropriate spot if more than 1
+        {
+            if(seeker->p >= inPoint)//if it's smaller or the same, add it in front
+            {
+                newNode->next=trailer->next;
+                trailer->next=newNode;
+                size++;
+                return;
+            }
+            trailer=seeker;
             seeker=seeker->next;
         }
-        if(seeker->next== nullptr)
+        if(seeker->p >= inPoint)//if it's smaller or the same as the last point(which the loop didn't test, add it in front
         {
-            seeker->next=newNode;
+            newNode->next=trailer->next;
+            trailer->next=newNode;
+            size++;
+            return;
         }
-
+        seeker->next=newNode;//if it hasn't been added yet, it must go at the end
         size++;
-
     }
 
-    const PointPtr &Cluster::remove(const PointPtr &target)
+    const PointPtr& Cluster::remove(const PointPtr &target)
     {
         LNodePtr seeker=head, trailer=head;
         if(size==0)
             return target; //return target if cluster empty
-        while(seeker->p!=target&&seeker->next!= nullptr)
+        while(seeker->p!=target&&seeker->next!= nullptr)//look for target point
         {
             trailer =seeker;
             seeker=seeker->next;
         }
-        if(seeker->p==target)
+        if(seeker->p==target)//if it was found, kill it
         {
             trailer->next=seeker->next;
             if(seeker==head)
@@ -109,7 +129,7 @@ namespace Clustering
         os<<"Cluster "<<(&cluster)<<" contains: ";
         do
         {
-            os<< seeker->p<<",";
+            os<< *(seeker->p)<<" ";
             seeker=seeker->next;
         }while(seeker!= nullptr);
         os<<std::endl;
