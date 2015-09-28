@@ -109,6 +109,16 @@ void clusterTester()
     cout<<"Now removing p2"<<endl;
     c1.remove(p2);
     cout<<c1;
+    cout<<"creating another cluster with c1"<<endl;
+    Clustering::Cluster c2(c1);
+    cout<<c1<<c2;
+    cout<<"removing points from c2"<<endl;
+    c2.remove(p1);
+    c2.remove(p3);
+    c1.add(p2);
+    cout<<c1<<c2<<"+Equality op test"<<endl;
+    c2=c1;
+    cout<<c1<<c2;
 
 }
 

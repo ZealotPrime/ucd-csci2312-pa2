@@ -9,53 +9,27 @@ namespace Clustering
 
    Cluster::Cluster(const Cluster &inCluster)
     {
-        LNodePtr local,remote;
-        size=inCluster.size;
-        if(size>0)
-        {
-            remote = inCluster.head;
-            head= new LNode;
-            head->p=remote->p;
-            local = head->next;
-            remote=remote->next;
-            while (remote->next != nullptr)
-            {
-                local->next=new LNode;
-                local->p=remote->p;
-                local=local->next;
-                remote=remote->next;
-            }
-            local=new LNode;
-            local->p=remote->p;
-            local->next= nullptr;
-
-        }
+        size=0;
+        *this=inCluster;
     }
 
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
     {
         LNodePtr local,remote;
-        size=inCluster.size;
-        if(size>0)
+        while(size>0)
         {
-            remote = inCluster.head;
-            head= new LNode;
-            head->p=remote->p;
-            local = head->next;
-            remote=remote->next;
-            while (remote->next != nullptr)
-            {
-                local->next=new LNode;
-                local->p=remote->p;
-                local=local->next;
-                remote=remote->next;
-            }
-            local=new LNode;
-            local->p=remote->p;
-            local->next= nullptr;
-
+            remove(head->p);
         }
+        if(inCluster.size>0) {
+            remote = inCluster.head;
+            add(remote->p);
+            while (remote->next != nullptr) {
+                remote = remote->next;
+                add(remote->p);
+            }
+        }
+
     return *this;
     }
 
@@ -135,7 +109,7 @@ namespace Clustering
         os<<"Cluster "<<(&cluster)<<" contains: ";
         do
         {
-            os<< &seeker->p<<",";
+            os<< seeker->p<<",";
             seeker=seeker->next;
         }while(seeker!= nullptr);
         os<<std::endl;
