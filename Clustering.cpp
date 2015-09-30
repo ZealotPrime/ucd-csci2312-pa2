@@ -171,6 +171,7 @@ namespace Clustering
             if(y==size)//if we didn't find it, add it.
                 add(rSeeker->p);
             rSeeker=rSeeker->next;//check the next one for matches
+            lSeeker=head;
         }
         return *this;
     }
@@ -192,19 +193,28 @@ namespace Clustering
                 lSeeker=lSeeker->next;
             }
             rSeeker=rSeeker->next;//check the next one for matches
+            lSeeker=head;
         }
         return *this;
     }
 
-    Cluster &Cluster::operator+=(const PointPtr &rhs)
+    Cluster &Cluster::operator+=(const Point &rhs)
     {
-        add(rhs);
+        PointPtr inPoint = new Point(rhs);
+        add(inPoint);
         return *this;
     }
 
-    Cluster &Cluster::operator-=(const PointPtr &rhs)
+    Cluster &Cluster::operator-=(const Point &rhs)
     {
-        remove(rhs);
+        LNodePtr seeker=head;
+        for(int x=0;x<size;x++)
+        {
+            if(*(seeker->p)==rhs)
+              remove(seeker->p);
+            seeker=seeker->next;
+        }
+
         return *this;
     }
 
