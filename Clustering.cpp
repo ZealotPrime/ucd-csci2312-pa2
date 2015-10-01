@@ -218,7 +218,7 @@ namespace Clustering
         return *this;
     }
 
-    const Cluster operator+(const Cluster &lhs, const Cluster &rhs) //as per the header file, this will duplicate points, unlike the += operator
+    const Cluster operator+(const Cluster &lhs, const Cluster &rhs) //
     {
         Cluster output;
         LNodePtr seeker=lhs.head;

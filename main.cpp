@@ -95,7 +95,9 @@ void clusterTester()
     Clustering::PointPtr p1=new Clustering::Point(3,set1);
     Clustering::PointPtr p2=new Clustering::Point(3,set2);
     Clustering::PointPtr p3=new Clustering::Point(3,set2);
+    Clustering::Point p4(3,set2);
     *p3*=2;
+
     Clustering::Cluster c1;
 
     cout<<c1<<endl;
@@ -116,9 +118,14 @@ void clusterTester()
     c2.remove(p1);
     c2.remove(p3);
     c1.add(p2);
-    cout<<c1<<c2<<"+Equality op test"<<endl;
+    cout<<c1<<c2<<"Equality op test"<<endl;
     c2=c1;
     cout<<c1<<c2;
+    cout<<"Removing 5 6 7 from c1:"<<endl;
+    c1-=p4;//getting code 11 from here
+    cout<<c1<<c2;
+    cout<<"Union of c1 and c2: "<<c1+c2;
+    cout<<"Difference of the 2: "<<c1-c2;
 
 }
 
