@@ -180,10 +180,9 @@ namespace Clustering
     {
         LNodePtr lSeeker=head;
         LNodePtr rSeeker=rhs.head;
-        int y;
         for(int x=0;x<rhs.size;x++)//iterate through the rhs's points
         {
-            for(y=0;y<size;y++)//compare against all the lhs's points
+            for(int y=0;y<size;y++)//compare against all the lhs's points
             {
                 if(lSeeker->p==rSeeker->p)//if we found the current point in the lhs and rhs, pull it from the lhs and break out of the loop
                 {
@@ -211,7 +210,12 @@ namespace Clustering
         for(int x=0;x<size;x++)
         {
             if(*(seeker->p)==rhs)
-              remove(seeker->p);
+            {
+                remove(seeker->p);
+                if (x >= size)//break early if target was last element
+                    break;
+            }
+
             seeker=seeker->next;
         }
 
