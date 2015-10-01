@@ -122,11 +122,11 @@ void clusterTester()
     c2=c1;
     cout<<c1<<c2;
     cout<<"Removing 5 6 7 from c1:"<<endl;
-    c1-=p4;//getting code 11 from here
+    c1-=p4;
     cout<<c1<<c2;
-    c2-=c1;
-    //cout<<"Union of c1 and c2: "<<c1;
-    cout<<"Difference of the 2: "<<c2;
+    //c2+=c1;
+    cout<<"Union of c1 and c2: "<<c1+c2;
+    cout<<"Difference of the 2: "<<c2-c1;
 
 }
 

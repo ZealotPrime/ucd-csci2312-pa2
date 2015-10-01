@@ -34,16 +34,10 @@ namespace Clustering
 
     Cluster::~Cluster()
     {
-        LNodePtr current,subsequent;
-        current=head;
-        subsequent=current->next;
-        while(current->next!= nullptr)
+        while(size>0)
         {
-            delete current;
-            current=subsequent->next;
-            subsequent=current->next;
+            remove(head->p);
         }
-        delete subsequent;
     }
 
     void Cluster::add(const PointPtr &inPoint)
@@ -144,7 +138,7 @@ namespace Clustering
         LNodePtr lSeeker=lhs.head;
         LNodePtr rSeeker=rhs.head;
         int counter=0;
-        while(lSeeker->p!= nullptr&&rSeeker!= nullptr)
+        while(lSeeker->next!= nullptr&&rSeeker->next!= nullptr)
         {
             lSeeker=lSeeker->next;
             rSeeker=rSeeker->next;
@@ -212,8 +206,7 @@ namespace Clustering
             if(*(seeker->p)==rhs)
             {
                 remove(seeker->p);
-                if (x >= size)//break early if target was last element
-                    break;
+                break;
             }
 
             seeker=seeker->next;
@@ -224,19 +217,8 @@ namespace Clustering
 
     const Cluster operator+(const Cluster &lhs, const Cluster &rhs) //
     {
-        Cluster output;
-        LNodePtr seeker=lhs.head;
-        for(int x=0;x<lhs.size;x++)//add all points from lhs
-        {
-            output.add(seeker->p);
-            seeker=seeker->next;
-        }
-        seeker=rhs.head;
-        for(int x=0;x<rhs.size;x++)//add all points from rhs
-        {
-            output.add(seeker->p);
-            seeker=seeker->next;
-        }
+        Cluster output(lhs);
+        output+=rhs;
         return output;
     }
 
