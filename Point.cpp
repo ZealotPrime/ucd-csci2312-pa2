@@ -4,6 +4,7 @@
 
 #include "Point.h"
 #include <cmath> //needed for distanceTo func
+#include "Clustering.h"
 #include <iostream>
 #include <string>
 
@@ -190,8 +191,10 @@ namespace Clustering { // I discovered the need to add this after I had written 
 
     std::istream &operator>>(std::istream &is, Clustering::Point &inPoint)
     {
-        for (int x = 0; x < inPoint.dim; x++)
-            is >> inPoint.values[x];
+        std::string worker;
+
+        for(int x=0;getline(is,worker,Clustering::DELIM);x++)
+            inPoint.values[x]=stod(worker);
 
         return is;
     }

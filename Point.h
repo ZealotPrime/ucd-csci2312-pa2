@@ -12,6 +12,7 @@ namespace Clustering {
     class Point {
         int dim;        // number of dimensions of the point
         double *values; // values of the point's dimensions
+        //const char DELIM=',';
 
     public:
         Point(int);

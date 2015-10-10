@@ -3,6 +3,8 @@
 //
 
 #include "Clustering.h"
+#include <string>
+#include <sstream>
 
 namespace Clustering
 {
@@ -216,7 +218,7 @@ namespace Clustering
         return *this;
     }
 
-    const Cluster operator+(const Cluster &lhs, const Cluster &rhs) //
+    const Cluster operator+(const Cluster &lhs, const Cluster &rhs)
     {
         Cluster output(lhs);
         output+=rhs;
@@ -250,5 +252,32 @@ namespace Clustering
         static unsigned int id=0;
         id++;
         return id;
+    }
+
+    std::istream &operator>>(std::istream &istream, Cluster &cluster)
+    {
+        int dims=1;
+        std::string worker;
+        PointPtr newPoint;
+
+        getline(istream,worker,'\n');//get first line
+        istream.seekg(istream.beg);//return to beginning of string after reading in the string to count dims
+        std::stringstream workStream(worker);//put it into a stream for sending to the point >>operator
+
+        for(int x=0;x<worker.size();x++)//count number of delimiters to determine how many dimentions point has
+            if(worker[x]==Clustering::DELIM)
+                dims++;
+
+
+
+        while(getline(istream,worker))//gets lines from the stream, puts them into a string
+        {
+            workStream.str(worker);//makes the string into a stream to send to point
+            newPoint= new Point(dims);//create point
+            workStream<<newPoint;//have it set data using the stream
+            cluster.add(newPoint);
+        }
+
+        return istream;
     }
 }
