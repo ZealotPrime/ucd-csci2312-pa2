@@ -97,8 +97,7 @@ void clusterTester()
     Clustering::PointPtr p3=new Clustering::Point(3,set2);
     Clustering::Point p4(3,set2);
     *p3*=2;
-
-    Clustering::Cluster c1;
+    Clustering::Cluster c1(true);
 
     cout<<c1<<endl;
     cout<<"Adding a new point to c1 cluster"<<endl;
@@ -127,6 +126,8 @@ void clusterTester()
     //c2+=c1;
     cout<<"Union of c1 and c2: "<<c1+c2;
     cout<<"Difference of the 2: "<<c2-c1;
+    c1+=c2;
+    c2-=c1;
 
 }
 

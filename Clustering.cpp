@@ -13,9 +13,17 @@ namespace Clustering
         size=0;
         *this=inCluster;
         id=getId();
+        releasePoints=false;
 
     }
 
+    Cluster::Cluster(bool release)
+    {
+        size=0;
+        head=nullptr;
+        id=getId();
+        releasePoints=release;
+    }
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
     {
@@ -37,9 +45,17 @@ namespace Clustering
 
     Cluster::~Cluster()
     {
+        PointPtr temp;
         while(size>0)
         {
-            remove(head->p);
+            if(releasePoints)//if relasePoints set, delete point and node
+            {
+                temp=head->p;
+                remove(head->p);
+                delete temp;
+            }
+            else
+                remove(head->p);//otherwise just remove the node
         }
     }
 
@@ -133,6 +149,32 @@ namespace Clustering
         return os;
     }
 
+    std::istream &operator>>(std::istream &istream, Cluster &cluster)
+    {
+        int dims=1;
+        std::string worker;
+        PointPtr newPoint;
+
+        getline(istream,worker,'\n');//get first line
+        istream.seekg(istream.beg);//return to beginning of string after reading in the string to count dims
+        std::stringstream workStream(worker);//put it into a stream for sending to the point >>operator
+
+        for(int x=0;x<worker.size();x++)//count number of delimiters to determine how many dimentions point has
+            if(worker[x]==Clustering::DELIM)
+                dims++;
+
+
+
+        while(getline(istream,worker))//gets lines from the stream, puts them into a string
+        {
+            workStream.str(worker);//makes the string into a stream to send to point
+            newPoint= new Point(dims);//create point
+            workStream<<newPoint;//have it set data using the stream
+            cluster.add(newPoint);
+        }
+
+        return istream;
+    }
 
     bool operator==(const Cluster &lhs, const Cluster &rhs)
     {
@@ -254,30 +296,6 @@ namespace Clustering
         return id;
     }
 
-    std::istream &operator>>(std::istream &istream, Cluster &cluster)
-    {
-        int dims=1;
-        std::string worker;
-        PointPtr newPoint;
-
-        getline(istream,worker,'\n');//get first line
-        istream.seekg(istream.beg);//return to beginning of string after reading in the string to count dims
-        std::stringstream workStream(worker);//put it into a stream for sending to the point >>operator
-
-        for(int x=0;x<worker.size();x++)//count number of delimiters to determine how many dimentions point has
-            if(worker[x]==Clustering::DELIM)
-                dims++;
 
 
-
-        while(getline(istream,worker))//gets lines from the stream, puts them into a string
-        {
-            workStream.str(worker);//makes the string into a stream to send to point
-            newPoint= new Point(dims);//create point
-            workStream<<newPoint;//have it set data using the stream
-            cluster.add(newPoint);
-        }
-
-        return istream;
-    }
 }

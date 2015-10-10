@@ -23,9 +23,12 @@ namespace Clustering {
         int size;
         LNodePtr head;
         unsigned int id;
+        bool releasePoints;
 
     public:
-        Cluster() : size(0), head(nullptr), id(getId()) {};
+        Cluster() : Cluster(false) {};
+
+        Cluster(bool);
 
         // The big three: cpy ctor, overloaded operator=, dtor
         Cluster(const Cluster &);
