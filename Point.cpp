@@ -4,6 +4,8 @@
 
 #include "Point.h"
 #include <cmath> //needed for distanceTo func
+#include <iostream>
+#include <string>
 
 Clustering::Point::Point(int dimSize)
 {
@@ -186,7 +188,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return os;
     }
 
-    std::istream &operator>>(std::istream &is, Clustering::Point &inPoint) {
+    std::istream &operator>>(std::istream &is, Clustering::Point &inPoint)
+    {
         for (int x = 0; x < inPoint.dim; x++)
             is >> inPoint.values[x];
 

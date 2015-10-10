@@ -6,11 +6,12 @@
 
 namespace Clustering
 {
-
    Cluster::Cluster(const Cluster &inCluster)
     {
         size=0;
         *this=inCluster;
+        id=getId();
+
     }
 
 
@@ -116,11 +117,11 @@ namespace Clustering
     {
         if(cluster.size==0)
         {
-            os<<"Cluster "<<(&cluster)<<" is empty"<<std::endl;
+            os<<"Cluster "<<cluster.id<<" is empty"<<std::endl;
             return os;
         }
         LNodePtr seeker=cluster.head;
-        os<<"Cluster "<<(&cluster)<<" contains: ";
+        os<<"Cluster "<<cluster.id<<" contains: ";
         do
         {
             os<< *(seeker->p)<<" ";
@@ -241,5 +242,13 @@ namespace Clustering
         Cluster output(lhs);
         output.remove(rhs);
         return lhs;
+    }
+
+
+    unsigned int Cluster::getId()
+    {
+        static unsigned int id=0;
+        id++;
+        return id;
     }
 }

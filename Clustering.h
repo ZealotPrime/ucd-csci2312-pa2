@@ -21,9 +21,10 @@ namespace Clustering {
     class Cluster {
         int size;
         LNodePtr head;
+        unsigned int id;
 
     public:
-        Cluster() : size(0), head(nullptr) {};
+        Cluster() : size(0), head(nullptr), id(getId()) {};
 
         // The big three: cpy ctor, overloaded operator=, dtor
         Cluster(const Cluster &);
@@ -58,6 +59,12 @@ namespace Clustering {
 
         friend const Cluster operator+(const Cluster &lhs, const PointPtr &rhs);
         friend const Cluster operator-(const Cluster &lhs, const PointPtr &rhs);
+
+    private:
+        unsigned int getId(); //returns a unique ID for this instance of cluster
+
+
+
 
     };
 
