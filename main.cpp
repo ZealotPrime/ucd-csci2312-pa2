@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Point.h"
 #include "Clustering.h"
+#include <fstream>
 
 using namespace std;
 
@@ -98,6 +99,7 @@ void clusterTester()
     Clustering::Point p4(3,set2);
     *p3*=2;
     Clustering::Cluster c1(true);
+    std::ofstream outFile("/home/zealot/ClionProjects/CSCI2312_PA2_Lee/ucd-csci2312-pa2/outpoints.txt");
 
     cout<<c1<<endl;
     cout<<"Adding a new point to c1 cluster"<<endl;
@@ -127,13 +129,29 @@ void clusterTester()
     cout<<"Union of c1 and c2: "<<c1+c2;
     cout<<"Difference of the 2: "<<c2-c1;
     c1+=c2;
+    outFile<<c1;
     c2-=c1;
+    outFile.close();
 
+}
+
+void fileIOTester()
+{
+    std::ifstream file("/home/zealot/ClionProjects/CSCI2312_PA2_Lee/ucd-csci2312-pa2/points.txt");
+    Clustering::Cluster c1(true);
+
+    cout<<"Begin File tester"<<endl;
+    if(file)
+        cout<<"file is open"<<endl;
+    file>>c1;
+
+    cout<<c1;
 }
 
 
 int main() {
-    pointTester();
-    clusterTester();
+    //pointTester();
+    //clusterTester();
+    fileIOTester();
     return 0;
 }

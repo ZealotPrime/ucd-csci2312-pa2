@@ -204,7 +204,9 @@ namespace Clustering { // I discovered the need to add this after I had written 
         std::string worker;
 
         for(int x=0;getline(is,worker,Clustering::DELIM);x++)
-            inPoint.values[x]=stod(worker);
+        {
+            inPoint.values[x] = stod(worker);
+        }
 
         return is;
     }
