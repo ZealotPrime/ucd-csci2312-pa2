@@ -135,17 +135,14 @@ namespace Clustering
     {
         if(cluster.size==0)
         {
-            os<<"Cluster "<<cluster.id<<" is empty"<<std::endl;
             return os;
         }
         LNodePtr seeker=cluster.head;
-        os<<"Cluster "<<cluster.id<<" contains: ";
         do
         {
-            os<< *(seeker->p)<<" ";
+            os<< *(seeker->p)<<" : "<<cluster.id<<std::endl;
             seeker=seeker->next;
         }while(seeker!= nullptr);
-        os<<std::endl;
         return os;
     }
 

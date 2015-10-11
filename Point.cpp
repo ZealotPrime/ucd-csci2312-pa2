@@ -131,14 +131,16 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return true;
     }
 
-    bool operator!=(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator!=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
             if (lhs.values[x] != rhs.values[x])
                 return true;
         return false;
     }
 
-    bool operator<(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator<(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
         {
             if (lhs.values[x] < rhs.values[x])
@@ -149,7 +151,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return false;
     }
 
-    bool operator>(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator>(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
         {
             if (lhs.values[x] > rhs.values[x])
@@ -160,7 +163,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return false;
     }
 
-    bool operator<=(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator<=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
         {
             if (lhs.values[x] < rhs.values[x])
@@ -171,7 +175,8 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return true;
     }
 
-    bool operator>=(const Clustering::Point &lhs, const Clustering::Point &rhs) {
+    bool operator>=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    {
         for (int x = 0; x < rhs.dim; x++)
         {
             if (lhs.values[x] > rhs.values[x])
@@ -182,10 +187,15 @@ namespace Clustering { // I discovered the need to add this after I had written 
         return true;
     }
 
-    std::ostream &operator<<(std::ostream &os, const Clustering::Point &inPoint) {
-        os << "Point " << (&inPoint) << ":";
+    std::ostream &operator<<(std::ostream &os, const Clustering::Point &inPoint)
+    {
         for (int x = 0; x < inPoint.dim; x++)
-            os << inPoint.values[x] << ",";
+        {
+            os<<std::showpoint;
+            os << inPoint.values[x];
+            if(x<inPoint.dim-1)
+                os<<Clustering::DELIM;
+        }
         return os;
     }
 
