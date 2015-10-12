@@ -11,8 +11,9 @@ namespace Clustering
    Cluster::Cluster(const Cluster &inCluster)
     {
         size=0;
+        __centroid= nullptr;
         *this=inCluster;
-        id=getId();
+        id= setID();
         releasePoints=false;
 
     }
@@ -21,8 +22,9 @@ namespace Clustering
     {
         size=0;
         head=nullptr;
-        id=getId();
+        id= setID();
         releasePoints=release;
+        __centroid= nullptr;
     }
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
@@ -38,6 +40,19 @@ namespace Clustering
                 remote = remote->next;
                 add(remote->p);
             }
+        }
+
+        if(inCluster.__centroid== nullptr)//if the target doesn't have a centroid,
+        {
+            if(__centroid!= nullptr)//but the current cluster does,
+                delete __centroid;//delete our centroid.
+        }
+        else//if the target does have a centroid,
+        {
+            if(__centroid== nullptr)//and we don't,
+                __centroid= new Point(*(inCluster.__centroid));//add one.
+            else//but if we do already have a centroid,
+                *__centroid=*(inCluster.__centroid);//make ours equal to the target's
         }
 
     return *this;
@@ -288,7 +303,7 @@ namespace Clustering
     }
 
 
-    unsigned int Cluster::getId()
+    unsigned int Cluster::setID()
     {
         static unsigned int id=0;
         id++;
@@ -296,5 +311,29 @@ namespace Clustering
     }
 
 
+    void Cluster::setCentroid(const Point &location)
+    {
+        if(__centroid!= nullptr)//if we already have a centroid,
+            *__centroid=location;//set it to the target location.
+        else//if we don't,
+            __centroid=new Point(location);//make one with the target's location
+    }
 
+    void Cluster::computeCentroid()
+    {
+        if(size==0)
+        {
+            std::cout<<"Cluster empty, cannot compute"<<std::endl;
+            return;
+        }
+        if(__centroid== nullptr)//if centroid hasn't been built yet,
+        {
+            __centroid=new Point(head->p->getDims());//make one based on existing point dimentionality.
+        }
+        else
+            for(int x=0;x<__centroid->getDims();x++)//zero out the centroid
+            {
+                __centroid->setValue(x,0);
+            }
+    }
 }

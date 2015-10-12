@@ -24,9 +24,11 @@ namespace Clustering {
         LNodePtr head;
         unsigned int id;
         bool releasePoints;
+        PointPtr __centroid;
+        bool centroidValid;
 
     public:
-        Cluster() : Cluster(false) {};
+        Cluster() : Cluster(false) {};//default ctor.
 
         Cluster(bool);
 
@@ -38,9 +40,17 @@ namespace Clustering {
         // Set functions: They allow calling c1.add(c2.remove(p));
         void add(const PointPtr &);
         const PointPtr &remove(const PointPtr &);
+        void setCentroid(const Point&);
+
+        //computation functions
+        void computeCentroid();
+
+
+        //getters
+        const unsigned int getID(){return id;}
+        const Point getCentroid(){return *__centroid;}
 
         // Overloaded operators
-
         // IO
         friend std::ostream &operator<<(std::ostream &, const Cluster &);
         friend std::istream &operator>>(std::istream &, Cluster &);
@@ -65,7 +75,7 @@ namespace Clustering {
         friend const Cluster operator-(const Cluster &lhs, const PointPtr &rhs);
 
     private:
-        unsigned int getId(); //returns a unique ID for this instance of cluster
+        unsigned int setID(); //returns a unique ID for this instance of cluster
 
 
 
