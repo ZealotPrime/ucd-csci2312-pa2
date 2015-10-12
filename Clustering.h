@@ -42,6 +42,14 @@ namespace Clustering {
         const PointPtr &remove(const PointPtr &);
         void setCentroid(const Point&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
+        class Move
+        {
+        public:
+            Move(const PointPtr &target,Cluster *from,Cluster *to){perform(target,from,to);};
+        private:
+            void perform(const PointPtr &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
+        };
+
 
 
         //getters
@@ -55,6 +63,7 @@ namespace Clustering {
         void computeCentroid();
         double intraClusterDistance()const;
         friend double interClusterDistance(Cluster &lhs,Cluster &rhs);
+        void pickPoints(int k, PointPtr *pointArray);
 
         // Overloaded operators
         // IO

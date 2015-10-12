@@ -38,7 +38,7 @@ namespace Clustering {
         const Point operator*(double) const; // prevent (p1*2) = p2;
         const Point operator/(double) const;
 
-        double &operator[](int index) { return values[index - 1]; } // TODO out-of-bds?
+        double &operator[](int index) { return values[index]; } // I got rid of the -1 here because I felt it was silly as only a programmer would ever use this
 
         // Friends
         friend Point &operator+=(Point &, const Point &);

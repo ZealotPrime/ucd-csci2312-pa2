@@ -125,12 +125,16 @@ void clusterTester()
     cout<<"Removing 5 6 7 from c1:"<<endl;
     c1-=p4;
     cout<<c1<<c2;
-    //c2+=c1;
     cout<<"Union of c1 and c2: "<<c1+c2;
     cout<<"Difference of the 2: "<<c2-c1;
     c1+=c2;
-    cout<<c1<<endl<<"InterCD: "<< c1.intraClusterDistance();
-
+    c2-=c1;
+    c1.computeCentroid();
+    cout<<c1<<c2<<endl<<"InterCD: "<< c1.intraClusterDistance()<<endl;
+    cout<<"centroid: "<<c1.getCentroid()<<endl;
+    cout<<"c1 edges: "<<c1.getClusterEdges()<<endl;
+    Clustering::Cluster::Move(p3,&c1,&c2);
+    std::cout<<c1<<c2<<std::endl;
     c2-=c1;
     outFile.close();
 

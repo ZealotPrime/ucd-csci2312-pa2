@@ -349,4 +349,19 @@ namespace Clustering {
         }
         return lhs.__centroid->distanceTo(*(rhs.__centroid));
     }
+
+    void Cluster::pickPoints(int k, PointPtr *pointArray)
+    {
+        int spread=k/size,x,index=0;
+        LNodePtr seeker;
+        for(x=0,seeker=head;seeker!= nullptr,index<k;x++,seeker=seeker->next)//iterate through nodes
+        {
+            if(x%spread==0)//if the index of the node we're on is a multiple of the spread, add it's point to the array
+                pointArray[index++]=seeker->p;
+        }
+        for(;index<k;index++)//add dummy points in case k>size
+            pointArray[x]=head->p;
+    }
+
+
 }
