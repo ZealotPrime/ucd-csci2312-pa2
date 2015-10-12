@@ -49,6 +49,7 @@ namespace Clustering {
         const Point getCentroid(){return *__centroid;}
         const bool centrodValid(){return centroidValidity;}
         const int getSize(){return size;}
+        int getClusterEdges(){return size * (size - 1) / 2;}
 
         //computation functions
         void computeCentroid();
