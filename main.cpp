@@ -129,7 +129,8 @@ void clusterTester()
     cout<<"Union of c1 and c2: "<<c1+c2;
     cout<<"Difference of the 2: "<<c2-c1;
     c1+=c2;
-    outFile<<c1;
+    cout<<c1<<endl<<"InterCD: "<< c1.intraClusterDistance();
+
     c2-=c1;
     outFile.close();
 
@@ -151,7 +152,7 @@ void fileIOTester()
 
 int main() {
     //pointTester();
-    //clusterTester();
-    fileIOTester();
+    clusterTester();
+    //fileIOTester();
     return 0;
 }

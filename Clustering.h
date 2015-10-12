@@ -44,14 +44,16 @@ namespace Clustering {
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
 
 
-        //computation functions
-        void computeCentroid();
-
-
         //getters
         const unsigned int getID(){return id;}
         const Point getCentroid(){return *__centroid;}
-        bool centrodValid(){return centroidValidity;}
+        const bool centrodValid(){return centroidValidity;}
+        const int getSize(){return size;}
+
+        //computation functions
+        void computeCentroid();
+        double intraClusterDistance()const;
+        friend double interClusterDistance(Cluster &lhs,Cluster &rhs);
 
         // Overloaded operators
         // IO
