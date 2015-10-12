@@ -25,7 +25,7 @@ namespace Clustering {
         unsigned int id;
         bool releasePoints;
         PointPtr __centroid;
-        bool centroidValid;
+        bool centroidValidity;
 
     public:
         Cluster() : Cluster(false) {};//default ctor.
@@ -41,6 +41,8 @@ namespace Clustering {
         void add(const PointPtr &);
         const PointPtr &remove(const PointPtr &);
         void setCentroid(const Point&);
+        void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
+
 
         //computation functions
         void computeCentroid();
@@ -49,6 +51,7 @@ namespace Clustering {
         //getters
         const unsigned int getID(){return id;}
         const Point getCentroid(){return *__centroid;}
+        bool centrodValid(){return centroidValidity;}
 
         // Overloaded operators
         // IO

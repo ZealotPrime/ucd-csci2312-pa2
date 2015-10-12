@@ -16,6 +16,7 @@ namespace Clustering
         id= setID();
         releasePoints=false;
 
+
     }
 
     Cluster::Cluster(bool release)
@@ -25,6 +26,7 @@ namespace Clustering
         id= setID();
         releasePoints=release;
         __centroid= nullptr;
+        centroidValidity=false;
     }
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
@@ -54,7 +56,6 @@ namespace Clustering
             else//but if we do already have a centroid,
                 *__centroid=*(inCluster.__centroid);//make ours equal to the target's
         }
-
     return *this;
     }
 
@@ -72,6 +73,8 @@ namespace Clustering
             else
                 remove(head->p);//otherwise just remove the node
         }
+        if(__centroid!= nullptr)//delete centroid if it exists
+            delete __centroid;
     }
 
     void Cluster::add(const PointPtr &inPoint)
@@ -80,7 +83,7 @@ namespace Clustering
 
         newNode->next= nullptr;//initialize new node
         newNode->p=inPoint;
-
+        centroidValidity=false;
         if(size==0)//if cluster currently empty, newNode is head
         {
             head=newNode;
@@ -142,6 +145,7 @@ namespace Clustering
                head=seeker->next;
             delete seeker;
             size--;
+            centroidValidity=false;
         }
         return target;
     }
@@ -326,6 +330,7 @@ namespace Clustering
             std::cout<<"Cluster empty, cannot compute"<<std::endl;
             return;
         }
+        LNodePtr seeker;
         if(__centroid== nullptr)//if centroid hasn't been built yet,
         {
             __centroid=new Point(head->p->getDims());//make one based on existing point dimentionality.
@@ -335,5 +340,10 @@ namespace Clustering
             {
                 __centroid->setValue(x,0);
             }
+        for(seeker=head;seeker!= nullptr;seeker=seeker->next)
+        {
+            *__centroid+=(*(seeker->p)/size);
+        }
+        centroidValidity =true;
     }
 }
