@@ -7,20 +7,23 @@
 
 #include "Point.h"
 
-namespace Clustering {
+namespace Clustering
+{
 
     static const char DELIM=',';
     typedef Point *PointPtr;
     typedef struct LNode *LNodePtr;
 
 
-    struct LNode {
+    struct LNode
+    {
         PointPtr p;
         LNodePtr next;
     };
 
-    class Cluster {
-        int size;
+    class Cluster
+    {
+        unsigned long int size;
         LNodePtr head;
         unsigned int id;
         bool releasePoints;
@@ -42,6 +45,7 @@ namespace Clustering {
         const PointPtr &remove(const PointPtr &);
         void setCentroid(const Point&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
+        void setReleasePoints(bool release){releasePoints=release;}
         class Move
         {
         public:
@@ -56,8 +60,8 @@ namespace Clustering {
         const unsigned int getID(){return id;}
         const Point getCentroid(){return *__centroid;}
         const bool centrodValid(){return centroidValidity;}
-        const int getSize(){return size;}
-        int getClusterEdges(){return size * (size - 1) / 2;}
+        const unsigned long int getSize(){return size;}
+        unsigned long int getClusterEdges(){return size * (size - 1) / 2;}
 
         //computation functions
         void computeCentroid();
@@ -69,6 +73,7 @@ namespace Clustering {
         // IO
         friend std::ostream &operator<<(std::ostream &, const Cluster &);
         friend std::istream &operator>>(std::istream &, Cluster &);
+        Point *operator[](unsigned long int index);
 
         // Set-preserving operators (do not duplicate points in the space)
         // - Friends
@@ -90,7 +95,7 @@ namespace Clustering {
         friend const Cluster operator-(const Cluster &lhs, const PointPtr &rhs);
 
     private:
-        unsigned int setID(); //returns a unique ID for this instance of cluster
+        unsigned int setID(); //returns a unique ID each time it's called
 
 
 

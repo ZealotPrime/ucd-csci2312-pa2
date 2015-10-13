@@ -186,7 +186,7 @@ namespace Clustering {
             return true;//clusters equal if they're both empty
         LNodePtr lSeeker = lhs.head;
         LNodePtr rSeeker = rhs.head;
-        int counter = 0;
+        unsigned long int counter = 0;
         while (lSeeker->next != nullptr && rSeeker->next != nullptr) {
             lSeeker = lSeeker->next;
             rSeeker = rSeeker->next;
@@ -201,8 +201,8 @@ namespace Clustering {
     Cluster &Cluster::operator+=(const Cluster &rhs) {
         LNodePtr lSeeker = head;
         LNodePtr rSeeker = rhs.head;
-        int y;
-        for (int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+        unsigned long int y;
+        for (unsigned long int x = 0; x < rhs.size; x++)//iterate through the rhs's points
         {
             for (y = 0; y < size; y++)//compare against all the lhs's points
             {
@@ -221,9 +221,9 @@ namespace Clustering {
     Cluster &Cluster::operator-=(const Cluster &rhs) {
         LNodePtr lSeeker = head;
         LNodePtr rSeeker = rhs.head;
-        for (int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+        for (unsigned long int x = 0; x < rhs.size; x++)//iterate through the rhs's points
         {
-            for (int y = 0; y < size; y++)//compare against all the lhs's points
+            for (unsigned long int y = 0; y < size; y++)//compare against all the lhs's points
             {
                 if (lSeeker->p ==
                     rSeeker->p)//if we found the current point in the lhs and rhs, pull it from the lhs and break out of the loop
@@ -239,66 +239,75 @@ namespace Clustering {
         return *this;
     }
 
-    Cluster &Cluster::operator+=(const Point &rhs) {
+    Cluster &Cluster::operator+=(const Point &rhs)
+    {
         PointPtr inPoint = new Point(rhs);
         add(inPoint);
         return *this;
     }
 
-    Cluster &Cluster::operator-=(const Point &rhs) {
+    Cluster &Cluster::operator-=(const Point &rhs)
+    {
         LNodePtr seeker = head;
-        for (int x = 0; x < size; x++) {
-            if (*(seeker->p) == rhs) {
+        for (; seeker!= nullptr; seeker = seeker->next)
+        {
+            if (*(seeker->p) == rhs)
+            {
                 remove(seeker->p);
                 break;
             }
-
-            seeker = seeker->next;
         }
 
         return *this;
     }
 
-    const Cluster operator+(const Cluster &lhs, const Cluster &rhs) {
+    const Cluster operator+(const Cluster &lhs, const Cluster &rhs)
+    {
         Cluster output(lhs);
         output += rhs;
         return output;
     }
 
-    const Cluster operator-(const Cluster &lhs, const Cluster &rhs) {
+    const Cluster operator-(const Cluster &lhs, const Cluster &rhs)
+    {
         Cluster output(lhs);
         output -= rhs;
         return output;
     }
 
-    const Cluster operator+(const Cluster &lhs, const PointPtr &rhs) {
+    const Cluster operator+(const Cluster &lhs, const PointPtr &rhs)
+    {
         Cluster output(lhs);
         output.add(rhs);
         return lhs;
     }
 
-    const Cluster operator-(const Cluster &lhs, const PointPtr &rhs) {
+    const Cluster operator-(const Cluster &lhs, const PointPtr &rhs)
+    {
         Cluster output(lhs);
         output.remove(rhs);
         return lhs;
     }
 
 
-    unsigned int Cluster::setID() {
+    unsigned int Cluster::setID()
+    {
         static unsigned int id = 0;
         id++;
         return id;
     }
 
 
-    void Cluster::setCentroid(const Point &location) {
+    void Cluster::setCentroid(const Point &location)
+    {
         if (__centroid != nullptr)//if we already have a centroid,
             *__centroid = location;//set it to the target location.
         else//if we don't,
             __centroid = new Point(location);//make one with the target's location
     }
 
-    void Cluster::computeCentroid() {
+    void Cluster::computeCentroid()
+    {
         if (size == 0) {
             std::cout << "Cluster empty, cannot compute" << std::endl;
             return;
@@ -313,13 +322,15 @@ namespace Clustering {
             {
                 __centroid->setValue(x, 0);
             }
-        for (seeker = head; seeker != nullptr; seeker = seeker->next) {
+        for (seeker = head; seeker != nullptr; seeker = seeker->next)
+        {
             *__centroid += (*(seeker->p) / size);
         }
         centroidValidity = true;
     }
 
-    double Cluster::intraClusterDistance() const {
+    double Cluster::intraClusterDistance() const
+    {
         LNodePtr outer, inner;
         double distance = 0;
 
@@ -330,8 +341,7 @@ namespace Clustering {
 
         for (outer = head; outer->next->next != nullptr; outer = outer->next)//case for 3 or more
         {
-            for (inner = outer->next; inner !=
-                                      nullptr; inner = inner->next)//start at outer's current location to prevent counting the same pairs twice
+            for (inner = outer->next; inner != nullptr; inner = inner->next)//start at outer's current location to prevent counting the same pairs twice
             {
                 distance += (outer->p->distanceTo(*(inner->p))) / size;
             }
@@ -352,7 +362,7 @@ namespace Clustering {
 
     void Cluster::pickPoints(int k, PointPtr *pointArray)
     {
-        int spread=k/size,x,index=0;
+        unsigned long int spread=k/size,x,index=0;
         LNodePtr seeker;
         for(x=0,seeker=head;seeker!= nullptr,index<k;x++,seeker=seeker->next)//iterate through nodes
         {
@@ -360,8 +370,22 @@ namespace Clustering {
                 pointArray[index++]=seeker->p;
         }
         for(;index<k;index++)//add dummy points in case k>size
-            pointArray[x]=head->p;
+            pointArray[index]=head->p;
     }
 
 
+    Point *Cluster::operator[](unsigned long int index)
+    {
+        if(index>size)//check for out of bounds
+            return nullptr;
+        LNodePtr seeker=head;
+        unsigned long int x;
+        for(x=0;seeker!= nullptr; x++)
+        {
+            if (x == index)
+                return seeker->p;
+            seeker = seeker->next;
+        }
+        return nullptr;
+    }
 }
