@@ -40,6 +40,19 @@ namespace Clustering
 
     void KMeans::iterateOnce()
     {
+        double tempDistance=0;
+        for(unsigned long int x=0;x<k;x++)//go through each cluster
+        {
+            for(unsigned long int y;y<clusterArray[x].getSize();y++)//test each of it's points
+            {
+                tempDistance=clusterArray[x][y]->distanceTo(clusterArray[x].getCentroid());
+                for(unsigned long int z=x+1;z<k;z++)//against the other points
+                {
+                    if(clusterArray[x][y]->distanceTo(clusterArray[z].getCentroid())<tempDistance)
 
+
+                }
+            }
+        }
     }
 }
