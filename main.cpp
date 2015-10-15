@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Point.h"
 #include "Clustering.h"
+#include "KMeans.h"
 #include <fstream>
 #include <random>
 #include <ctime>
@@ -9,13 +10,24 @@ void pointTester();
 void clusterTester();
 void fileIOTester();
 void randFileGen();
+void kmeanstest();
 
 int main() {
     randFileGen();
     //pointTester();
     //clusterTester();
     //fileIOTester();
+    kmeanstest();
     return 0;
+}
+
+void kmeanstest()
+{
+    ifstream infile("/home/zealot/ClionProjects/outpoints.txt");
+    ofstream outfile("/home/zealot/ClionProjects/kmeansoutput.txt");
+    Clustering::KMeans clusteringClusterer(10,infile);
+    clusteringClusterer.iterateUntill(100);
+    clusteringClusterer.outputPoints(outfile);
 }
 
 void randFileGen()
@@ -32,11 +44,13 @@ void randFileGen()
     cin>>max;
     Clustering::Point generatorPoint(numDims);
     for(unsigned int x=0;x<numPoints;x++)
-        for(unsigned int y=0;y<numDims;y++)
+    {
+        for (unsigned int y = 0; y < numDims; y++)
         {
-            generatorPoint.setValue(y,(rand()%(max*1000))/1000.0);
-            outfile<<generatorPoint<<endl;
+            generatorPoint.setValue(y, (rand() % (max * 1000)) / 1000.0);
         }
+        outfile << generatorPoint << endl;
+    }
     outfile.close();
 }
 

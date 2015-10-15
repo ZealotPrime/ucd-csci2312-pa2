@@ -170,7 +170,7 @@ namespace Clustering {
 
         while (getline(istream, worker, '\n'))//gets lines from the stream, puts them into a string
         {
-            std::cout << "Worker: " << worker << std::endl;
+            std::cout<<"loading point #"<<cluster.size<<std::endl;
             workStream.str(worker);//makes the string into a stream to send to point
             newPoint = new Point(dims);//create point
             workStream >> *newPoint;//have it set data using the stream
@@ -362,7 +362,7 @@ namespace Clustering {
 
     void Cluster::pickPoints(int k, PointPtr *pointArray)
     {
-        unsigned long int spread=k/size,x,index=0;
+        unsigned long int spread=size/k,x,index=0;
         LNodePtr seeker;
         for(x=0,seeker=head;seeker!= nullptr,index<k;x++,seeker=seeker->next)//iterate through nodes
         {

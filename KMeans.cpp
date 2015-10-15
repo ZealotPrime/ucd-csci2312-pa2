@@ -2,6 +2,7 @@
 // Created by zealot on 10/12/15.
 //
 
+#include <cmath>
 #include "KMeans.h"
 
 namespace Clustering
@@ -17,10 +18,11 @@ namespace Clustering
         numberOfIterations=0;
 
         is>>clusterArray[0];//load teh dataz into master cluster
+        std::cout<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
         {
-            clusterArray[x].setCentroid(*initialCentroids[x]);//set each cluster's respective centroid from the generated centroids
+            clusterArray[x].setCentroid(*(initialCentroids[x]));//set each cluster's respective centroid from the generated centroids
         }
     }
 
@@ -37,7 +39,7 @@ namespace Clustering
 
         oldscore=score;
         score= intra/inter;//set score to the ratio of the two
-        scoreDiff =(score+oldscore)/2;
+        scoreDiff =std::fabs(score-oldscore);
     }
 
     void KMeans::recalculateInvalidCentroids()
@@ -78,7 +80,7 @@ namespace Clustering
     {
         bool limit;
         unsigned long int startIteration=numberOfIterations;
-        maxIterations==0?(limit=true):(limit=false);//determine if the function is supposed to stop after a number of iterations
+        maxIterations==0?(limit=false):(limit=true);//determine if the function is supposed to stop after a number of iterations
         while(scoreDiff>SCORE_DIFF_THRESHOLD)
         {
             iterateOnce();
