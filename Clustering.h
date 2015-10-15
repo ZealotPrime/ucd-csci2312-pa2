@@ -73,7 +73,7 @@ namespace Clustering
         // IO
         friend std::ostream &operator<<(std::ostream &, const Cluster &);
         friend std::istream &operator>>(std::istream &, Cluster &);
-        const Point* operator[](unsigned long int index);
+        const Clustering::PointPtr operator[](unsigned long int index);
 
         // Set-preserving operators (do not duplicate points in the space)
         // - Friends

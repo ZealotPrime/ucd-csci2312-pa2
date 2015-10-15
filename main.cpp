@@ -2,8 +2,43 @@
 #include "Point.h"
 #include "Clustering.h"
 #include <fstream>
-
+#include <random>
+#include <ctime>
 using namespace std;
+void pointTester();
+void clusterTester();
+void fileIOTester();
+void randFileGen();
+
+int main() {
+    randFileGen();
+    //pointTester();
+    //clusterTester();
+    //fileIOTester();
+    return 0;
+}
+
+void randFileGen()
+{
+    default_random_engine rand;
+
+    unsigned int numDims,numPoints,max;
+    ofstream outfile("/home/zealot/ClionProjects/outpoints.txt");
+    cout<<"How many points to generate? "<<endl;
+    cin>>numPoints;
+    cout<<"How many dimentions should they have?"<<endl;
+    cin>>numDims;
+    cout<<"max value?"<<endl;
+    cin>>max;
+    Clustering::Point generatorPoint(numDims);
+    for(unsigned int x=0;x<numPoints;x++)
+        for(unsigned int y=0;y<numDims;y++)
+        {
+            generatorPoint.setValue(y,(rand()%(max*1000))/1000.0);
+            outfile<<generatorPoint<<endl;
+        }
+    outfile.close();
+}
 
 void pointTester()
 {
@@ -153,10 +188,3 @@ void fileIOTester()
     cout<<c1;
 }
 
-
-int main() {
-    //pointTester();
-    clusterTester();
-    //fileIOTester();
-    return 0;
-}

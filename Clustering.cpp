@@ -374,7 +374,7 @@ namespace Clustering {
     }
 
 
-    const Point* Cluster::operator[](unsigned long int index)
+    const PointPtr Cluster::operator[](unsigned long int index)
     {
         if(index>size)//check for out of bounds
             return nullptr;
