@@ -84,7 +84,7 @@ namespace Clustering {
         }
         if (seeker->next == nullptr)//if cluster has 1 point
         {
-            if (seeker->p < inPoint)//put new point at end if it's bigger
+            if (*(seeker->p) < *(inPoint))//put new point at end if it's bigger
             {
                 seeker->next = newNode;
                 size++;
@@ -99,7 +99,7 @@ namespace Clustering {
         }
         while (seeker->next != nullptr)//seek to appropriate spot if more than 1
         {
-            if (seeker->p >= inPoint)//if it's smaller or the same, add it in front
+            if (*(seeker->p) >= *(inPoint))//if it's smaller or the same, add it in front
             {
                 newNode->next = trailer->next;
                 trailer->next = newNode;
@@ -109,8 +109,7 @@ namespace Clustering {
             trailer = seeker;
             seeker = seeker->next;
         }
-        if (seeker->p >=
-            inPoint)//if it's smaller or the same as the last point(which the loop didn't test, add it in front
+        if (*(seeker->p) >= *(inPoint))//if it's smaller or the same as the last point(which the loop didn't test, add it in front
         {
             newNode->next = trailer->next;
             trailer->next = newNode;

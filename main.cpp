@@ -13,7 +13,7 @@ void randFileGen();
 void kmeanstest();
 
 int main() {
-    randFileGen();
+    //randFileGen();
     //pointTester();
     //clusterTester();
     //fileIOTester();
