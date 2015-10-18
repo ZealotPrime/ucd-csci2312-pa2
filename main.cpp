@@ -4,13 +4,14 @@
 #include "KMeans.h"
 #include <fstream>
 #include <random>
-#include <ctime>
+#include <time.h>
 using namespace std;
 void pointTester();
 void clusterTester();
 void fileIOTester();
 void randFileGen();
 void kmeanstest();
+
 
 int main() {
     randFileGen();
@@ -24,12 +25,14 @@ int main() {
 void kmeanstest()
 {
     int k;
+
     ifstream infile("/home/zealot/ClionProjects/outpoints.txt");
     ofstream outfile("/home/zealot/ClionProjects/kmeansoutput.txt");
 
     cout<<"How many clusters?"<<endl;
     cin>>k;
     Clustering::KMeans clusteringClusterer(k,infile);
+    cout<<"Iterating..."<<endl<<flush;
     clusteringClusterer.iterateUntill(100);
     clusteringClusterer.outputPoints(outfile);
 }
@@ -37,7 +40,7 @@ void kmeanstest()
 void randFileGen()
 {
     default_random_engine rand;
-
+    clock_t timer;
     unsigned int numDims,numPoints,max;
     ofstream outfile("/home/zealot/ClionProjects/outpoints.txt");
     cout<<"How many points to generate? "<<endl;
@@ -47,6 +50,9 @@ void randFileGen()
     cout<<"max value?"<<endl;
     cin>>max;
     Clustering::Point generatorPoint(numDims);
+    cout<<"Generating...";
+    cout<<flush;
+    timer=clock();
     for(unsigned int x=0;x<numPoints;x++)
     {
         for (unsigned int y = 0; y < numDims; y++)
@@ -55,6 +61,8 @@ void randFileGen()
         }
         outfile << generatorPoint << endl;
     }
+    timer=clock()-timer;
+    cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<endl;
     outfile.close();
 }
 

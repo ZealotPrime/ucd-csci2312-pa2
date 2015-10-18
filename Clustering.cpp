@@ -172,7 +172,6 @@ namespace Clustering {
 
         while (getline(istream, worker, '\n'))//gets lines from the stream, puts them into a string
         {
-            std::cout<<"loading point #"<<cluster.size<<std::endl;
             workStream.str(worker);//makes the string into a stream to send to point
             newPoint = new Point(dims);//create point
             workStream >> *newPoint;//have it set data using the stream

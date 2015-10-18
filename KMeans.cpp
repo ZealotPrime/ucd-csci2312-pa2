@@ -9,17 +9,20 @@ namespace Clustering
 {
     KMeans::KMeans(int k, std::istream &is)
     {
+        clock_t timer;
         PointPtr initialCentroids[k];
         clusterArray= new Cluster[k];//create array of k clusters
         clusterArray[0].setReleasePoints(true);//set the master to release it's points
         this->k=k;
         scoreDiff =SCORE_DIFF_THRESHOLD+1;
-        score=1000.0;
+        score=1000000.0;
         numberOfIterations=0;
-
+        std::cout<<"Loading points...";
+        std::cout<<std::flush;
+        timer=clock();//get clock to time operation
         is>>clusterArray[0];//load teh dataz into master cluster
-        std::cout<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
-        std::cout<<"Initial cluster: "<<std::endl<<clusterArray[0];
+        timer=clock()-timer;
+        std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
         {
@@ -39,8 +42,8 @@ namespace Clustering
                 inter+=(interClusterDistance(clusterArray[x],clusterArray[y])/k);//calc mean intercluster distance
 
         oldscore=score;
-        score= intra/inter;//set score to the ratio of the two
-        scoreDiff =std::fabs(score-oldscore);
+        score=intra/inter;//set score to the ratio of the two
+        scoreDiff =oldscore-score;//computer scoreDiff
     }
 
     void KMeans::recalculateInvalidCentroids()
@@ -55,6 +58,7 @@ namespace Clustering
     {
         double tempDistance=0;
         bool nextPoint=false;
+        clock_t timer=clock();
         for(int containingCluster =0; containingCluster <k; containingCluster++)//go through each cluster
         {
             for(unsigned long int currentPoint=0; currentPoint <clusterArray[containingCluster].getSize(); currentPoint++)//and each of it's points
@@ -73,7 +77,8 @@ namespace Clustering
         }
         recalculateInvalidCentroids();
         computeClusteringScore();
-        std::cout<<"Iteration: "<<numberOfIterations++<<" Score: "<<score<<" ScoreDiff: "<< scoreDiff <<std::endl;
+        timer=clock()-timer;
+        std::cout<<"Iteration: "<<numberOfIterations++<<" Score: "<<score<<"("<< scoreDiff<<") ("<<(double)timer/CLOCKS_PER_SEC<<" Seconds)" <<std::endl;
     }
 
 
@@ -81,13 +86,20 @@ namespace Clustering
     {
         bool limit;
         unsigned long int startIteration=numberOfIterations;
+        clock_t timer=clock();
         maxIterations==0?(limit=false):(limit=true);//determine if the function is supposed to stop after a number of iterations
         while(scoreDiff>SCORE_DIFF_THRESHOLD)
         {
             iterateOnce();
             if(limit&&numberOfIterations-startIteration>maxIterations)//end before threshold if at max iterations
+            {
+                timer=clock()-timer;
+                std::cout<<(double)timer/CLOCKS_PER_SEC<<" seconds for all iterations"<<std::endl;
                 return;
+            }
         }
+        timer=clock()-timer;
+        std::cout<<((double)timer/CLOCKS_PER_SEC)<<" seconds for all iterations, "<<((double)timer/CLOCKS_PER_SEC)/(numberOfIterations-1)<<" second average time per iteration"<<std::endl;
     }
 
     void KMeans::outputPoints(std::ostream &os)
