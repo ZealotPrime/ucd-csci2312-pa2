@@ -13,7 +13,7 @@ void randFileGen();
 void kmeanstest();
 
 int main() {
-    //randFileGen();
+    randFileGen();
     //pointTester();
     //clusterTester();
     //fileIOTester();
@@ -23,9 +23,13 @@ int main() {
 
 void kmeanstest()
 {
+    int k;
     ifstream infile("/home/zealot/ClionProjects/outpoints.txt");
     ofstream outfile("/home/zealot/ClionProjects/kmeansoutput.txt");
-    Clustering::KMeans clusteringClusterer(10,infile);
+
+    cout<<"How many clusters?"<<endl;
+    cin>>k;
+    Clustering::KMeans clusteringClusterer(k,infile);
     clusteringClusterer.iterateUntill(100);
     clusteringClusterer.outputPoints(outfile);
 }
@@ -47,7 +51,7 @@ void randFileGen()
     {
         for (unsigned int y = 0; y < numDims; y++)
         {
-            generatorPoint.setValue(y, (rand() % (max * 1000)) / 1000.0);
+            generatorPoint.setValue(y, (rand() % ((max * 2000)) / 1000.0)-max);
         }
         outfile << generatorPoint << endl;
     }

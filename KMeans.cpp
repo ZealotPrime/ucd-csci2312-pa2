@@ -19,6 +19,7 @@ namespace Clustering
 
         is>>clusterArray[0];//load teh dataz into master cluster
         std::cout<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
+        std::cout<<"Initial cluster: "<<std::endl<<clusterArray[0];
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
         {

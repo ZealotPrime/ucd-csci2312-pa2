@@ -82,11 +82,11 @@ namespace Clustering {
             size++;
             return;
         }
-        if (seeker->next == nullptr)//if cluster has 1 point
+        if (head->next == nullptr)//if cluster has 1 point
         {
-            if (*(seeker->p) < *(inPoint))//put new point at end if it's bigger
+            if (*(head->p) < *(inPoint))//put new point at end if it's bigger
             {
-                seeker->next = newNode;
+                head->next = newNode;
                 size++;
                 return;
             }
@@ -94,10 +94,20 @@ namespace Clustering {
             {
                 newNode->next = head->next;
                 head = newNode;
+                size++;
                 return;
             }
         }
-        while (seeker->next != nullptr)//seek to appropriate spot if more than 1
+
+        if (*(head->p) > *(inPoint))//if the new element should be 1st
+        {
+            newNode->next = head;
+            head = newNode;
+            size++;
+            return;
+        }
+        seeker=head->next;
+        while (seeker != nullptr)//seek to appropriate spot if more than 1
         {
             if (*(seeker->p) >= *(inPoint))//if it's smaller or the same, add it in front
             {
@@ -109,14 +119,7 @@ namespace Clustering {
             trailer = seeker;
             seeker = seeker->next;
         }
-        if (*(seeker->p) >= *(inPoint))//if it's smaller or the same as the last point(which the loop didn't test, add it in front
-        {
-            newNode->next = trailer->next;
-            trailer->next = newNode;
-            size++;
-            return;
-        }
-        seeker->next = newNode;//if it hasn't been added yet, it must go at the end
+        trailer->next = newNode;//if it hasn't been added yet, it must go at the end
         size++;
     }
 
@@ -186,7 +189,10 @@ namespace Clustering {
         LNodePtr lSeeker = lhs.head;
         LNodePtr rSeeker = rhs.head;
         unsigned long int counter = 0;
-        while (lSeeker->next != nullptr && rSeeker->next != nullptr) {
+        while (lSeeker != nullptr && rSeeker != nullptr)
+        {
+            if(*(lSeeker->p)!=*(rSeeker->p))//if the points aren't equal, the clusters aren't equal
+                return false;
             lSeeker = lSeeker->next;
             rSeeker = rSeeker->next;
             counter++;
@@ -375,8 +381,7 @@ namespace Clustering {
 
     const PointPtr Cluster::operator[](unsigned long int index)
     {
-        if(index>size)//check for out of bounds
-            return nullptr;
+
         LNodePtr seeker=head;
         unsigned long int x;
         for(x=0;seeker!= nullptr; x++)

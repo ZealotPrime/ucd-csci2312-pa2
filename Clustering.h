@@ -58,7 +58,7 @@ namespace Clustering
 
         //getters
         const unsigned int getID(){return id;}
-        const Point getCentroid(){return *__centroid;}
+        const Point& getCentroid(){return *__centroid;}
         const bool centrodValid(){return centroidValidity;}
         const unsigned long int getSize(){return size;}
         unsigned long int getClusterEdges(){return size * (size - 1) / 2;}
