@@ -10,6 +10,7 @@ namespace Clustering
     {
     public:
         static constexpr double SCORE_DIFF_THRESHOLD=.001;
+        static constexpr int STATLEVEL = 3;
     private:
         Cluster *clusterArray;
         double score, scoreDiff;
@@ -22,6 +23,7 @@ namespace Clustering
         void iterateOnce();
         void iterateUntill(unsigned long int);//iterates until scorediff below threshold, or x times(0 for infinite iterations)
         void outputPoints(std::ostream& os);
+        void clusterStats();
     };
 }
 

@@ -61,10 +61,12 @@ namespace Clustering
         clock_t timer=clock();
             for (int containingCluster = 0; containingCluster < k; containingCluster++)//go through each cluster
             {
+                if(STATLEVEL>2)
+                    clusterStats();
                 for (clusterArray[containingCluster].getNextPoint(true); clusterArray[containingCluster].getCurrentPoint() != nullptr; clusterArray[containingCluster].getNextPoint(false))//and each of it's points
                 {
                     tempDistance = clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
-                    for (int targetCluster = ((numberOfIterations==0)?(containingCluster+1):(0)); targetCluster < k; (++targetCluster==containingCluster?targetCluster++:1))//test against the other clusters
+                    for (int targetCluster = ((numberOfIterations==0)?(containingCluster+1):(containingCluster==0?1:0)); targetCluster < k; (++targetCluster==containingCluster?targetCluster++:1))//test against the other clusters
                     {// the question mark operator here is to make the system use a more efficient 1 way version of the algorithm if it's the first loop
                         if (clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[targetCluster].getCentroid()) < tempDistance)//if it's closer to the target cluster
                         {
@@ -79,6 +81,8 @@ namespace Clustering
         computeClusteringScore();
         timer=clock()-timer;
         std::cout<<"Iteration: "<<numberOfIterations++<<" Score: "<<score<<"("<< scoreDiff<<") ("<<(double)timer/CLOCKS_PER_SEC<<" Seconds)" <<std::endl;
+        if(STATLEVEL>1)
+            clusterStats();
     }
 
 
@@ -93,18 +97,28 @@ namespace Clustering
             iterateOnce();
             if(limit&&numberOfIterations-startIteration>maxIterations)//end before threshold if at max iterations
             {
-                timer=clock()-timer;
-                std::cout<<(double)timer/CLOCKS_PER_SEC<<" seconds for all iterations"<<std::endl;
-                return;
+                break;
             }
         }
         timer=clock()-timer;
         std::cout<<((double)timer/CLOCKS_PER_SEC)<<" seconds for all iterations, "<<((double)timer/CLOCKS_PER_SEC)/(numberOfIterations)<<" second average time per iteration"<<std::endl;
+        if(STATLEVEL)
+            clusterStats();
     }
 
     void KMeans::outputPoints(std::ostream &os)
     {
         for(int x=0;x<k;x++)
             os<<(clusterArray[x]);
+    }
+
+    void KMeans::clusterStats()
+    {
+        std::cout<<"Points per cluster: ";
+        for(unsigned int x=0;x<k;x++)
+        {
+            std::cout<<clusterArray[x].getID()<<":"<<clusterArray[x].getSize()<<" ";
+        }
+        std::cout<<std::endl;
     }
 }
