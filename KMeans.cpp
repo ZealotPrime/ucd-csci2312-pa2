@@ -59,22 +59,22 @@ namespace Clustering
         double tempDistance=0;
         bool nextPoint=false;
         clock_t timer=clock();
-        for(int containingCluster =0; containingCluster <k; containingCluster++)//go through each cluster
-        {
-            for(unsigned long int currentPoint=0; currentPoint <clusterArray[containingCluster].getSize(); currentPoint++)//and each of it's points
+            for (int containingCluster = 0; containingCluster < k; containingCluster++)//go through each cluster
             {
-                tempDistance=clusterArray[containingCluster][currentPoint]->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
-                for(int targetCluster = containingCluster +1; targetCluster <k; targetCluster++)//test against the other clusters
+                for (clusterArray[containingCluster].getNextPoint(true); clusterArray[containingCluster].getCurrentPoint() != nullptr; clusterArray[containingCluster].getNextPoint(false))//and each of it's points
                 {
-                    if(clusterArray[containingCluster][currentPoint]->distanceTo(clusterArray[targetCluster].getCentroid())<tempDistance)//if it's closer to the target cluster
-                    {
-                        Cluster::Move(clusterArray[containingCluster][currentPoint], &(clusterArray[containingCluster]), &(clusterArray[targetCluster]));//move it
-                        currentPoint--;
-                        break;
+                    tempDistance = clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
+                    for (int targetCluster = ((numberOfIterations==0)?(containingCluster+1):(0)); targetCluster < k; (++targetCluster==containingCluster?targetCluster++:1))//test against the other clusters
+                    {// the question mark operator here is to make the system use a more efficient 1 way version of the algorithm if it's the first loop
+                        if (clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[targetCluster].getCentroid()) < tempDistance)//if it's closer to the target cluster
+                        {
+                            Cluster::Move(clusterArray[containingCluster].getCurrentPoint(), &(clusterArray[containingCluster]), &(clusterArray[targetCluster]));//move it
+                            clusterArray[containingCluster].goToPreviousNode();
+                            break;
+                        }
                     }
                 }
             }
-        }
         recalculateInvalidCentroids();
         computeClusteringScore();
         timer=clock()-timer;
@@ -99,7 +99,7 @@ namespace Clustering
             }
         }
         timer=clock()-timer;
-        std::cout<<((double)timer/CLOCKS_PER_SEC)<<" seconds for all iterations, "<<((double)timer/CLOCKS_PER_SEC)/(numberOfIterations-1)<<" second average time per iteration"<<std::endl;
+        std::cout<<((double)timer/CLOCKS_PER_SEC)<<" seconds for all iterations, "<<((double)timer/CLOCKS_PER_SEC)/(numberOfIterations)<<" second average time per iteration"<<std::endl;
     }
 
     void KMeans::outputPoints(std::ostream &os)

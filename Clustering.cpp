@@ -136,7 +136,10 @@ namespace Clustering {
         {
             trailer->next = seeker->next;
             if (seeker == head)
+            {
                 head = seeker->next;
+                previousNode=head;
+            }
             delete seeker;
             size--;
             centroidValidity = false;
@@ -378,17 +381,41 @@ namespace Clustering {
     }
 
 
-    const PointPtr Cluster::operator[](unsigned long int index)
-    {
 
-        LNodePtr seeker=head;
-        unsigned long int x;
-        for(x=0;seeker!= nullptr; x++)
+
+    PointPtr Cluster::getNextPoint(bool begin)
+    {
+        if(head== nullptr)
         {
-            if (x == index)
-                return seeker->p;
-            seeker = seeker->next;
+            currentPoint= nullptr;
+            currentNode= nullptr;
+            previousNode= nullptr;
+            return currentPoint;
         }
+        if(begin)//returns first point if begin is true
+        {
+            currentPoint=head->p;
+            currentNode=head;
+            previousNode=head;
+            return currentPoint;
+        }
+        if(currentNode!= nullptr)//if we're not past the last node already,
+        {
+            previousNode=currentNode;//store the current before we go on in case we need it later
+            currentNode=currentNode->next;//go to the next one.
+            if(currentNode!= nullptr)//if it we still aren't past the end,
+            {
+                currentPoint=currentNode->p;//then set and return the point we're on to the current node's
+                return currentPoint;
+            }
+        }
+        currentPoint= nullptr;
         return nullptr;
+    }
+
+    void Cluster::goToPreviousNode()
+    {
+        currentNode=previousNode;
+        currentPoint=nullptr;
     }
 }

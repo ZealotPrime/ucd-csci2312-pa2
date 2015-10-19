@@ -29,6 +29,9 @@ namespace Clustering
         bool releasePoints;
         PointPtr __centroid;
         bool centroidValidity;
+        PointPtr currentPoint;
+        LNodePtr currentNode;
+        LNodePtr previousNode;
 
     public:
         Cluster() : Cluster(false) {};//default ctor.
@@ -53,7 +56,7 @@ namespace Clustering
         private:
             void perform(const PointPtr &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
         };
-
+        void goToPreviousNode();
 
 
         //getters
@@ -62,6 +65,8 @@ namespace Clustering
         const bool centrodValid(){return centroidValidity;}
         const unsigned long int getSize(){return size;}
         unsigned long int getClusterEdges(){return size * (size - 1) / 2;}
+        PointPtr& getCurrentPoint(){return currentPoint;}
+        PointPtr getNextPoint(bool begin);
 
         //computation functions
         void computeCentroid();
@@ -73,7 +78,6 @@ namespace Clustering
         // IO
         friend std::ostream &operator<<(std::ostream &, const Cluster &);
         friend std::istream &operator>>(std::istream &, Cluster &);
-        const Clustering::PointPtr operator[](unsigned long int index);
 
         // Set-preserving operators (do not duplicate points in the space)
         // - Friends
