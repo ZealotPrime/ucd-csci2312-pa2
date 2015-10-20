@@ -418,4 +418,10 @@ namespace Clustering {
         currentNode=previousNode;
         currentPoint=nullptr;
     }
+
+    unsigned int getInterClusterEdges(Cluster &c1, Cluster &c2)
+    {
+        unsigned int totalSize=c1.size+c2.size;
+        return (totalSize*(totalSize-1)/2);
+    }
 }

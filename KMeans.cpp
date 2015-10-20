@@ -32,7 +32,7 @@ namespace Clustering
 
     void KMeans::computeClusteringScore()
     {
-        double intra=0,inter=0,oldscore;
+        double intra=0,inter=0,intraEdge=0,interEdge=0,oldscore;
         for(int x=0;x<k;x++)
         {
             intra+=(clusterArray[x].intraClusterDistance())/k;//calc mean intracluster distance
@@ -40,9 +40,14 @@ namespace Clustering
         for(int x=0;x<k-1;x++)
             for(int y=x+1;y<k;y++)
                 inter+=(interClusterDistance(clusterArray[x],clusterArray[y])/k);//calc mean intercluster distance
+        for(int x=0;x<k;x++)
+            interEdge+=clusterArray[x].getClusterEdges();
+        for(int x=0;x<k-1;x++)
+            for(int y=x+1;y<k;y++)
+                intraEdge+=getInterClusterEdges(clusterArray[x],clusterArray[y]);
 
         oldscore=score;
-        score=intra/inter;//set score to the ratio of the two
+        score=intra/intraEdge/inter/interEdge*100;//set score to the ratio of the two
         scoreDiff =oldscore-score;//computer scoreDiff
     }
 

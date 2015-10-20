@@ -10,7 +10,7 @@ namespace Clustering
     {
     public:
         static constexpr double SCORE_DIFF_THRESHOLD=.001;
-        static constexpr int STATLEVEL = 3;
+        static constexpr int STATLEVEL = 2;
     private:
         Cluster *clusterArray;
         double score, scoreDiff;

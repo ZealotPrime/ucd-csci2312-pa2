@@ -65,6 +65,8 @@ namespace Clustering
         const bool centrodValid(){return centroidValidity;}
         const unsigned long int getSize(){return size;}
         unsigned long int getClusterEdges(){return size * (size - 1) / 2;}
+
+        friend unsigned int getInterClusterEdges(Cluster&, Cluster&);
         PointPtr& getCurrentPoint(){return currentPoint;}
         PointPtr getNextPoint(bool begin);
 
