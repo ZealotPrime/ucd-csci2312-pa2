@@ -190,7 +190,7 @@ namespace Clustering {
             return true;//clusters equal if they're both empty
         LNodePtr lSeeker = lhs.head;
         LNodePtr rSeeker = rhs.head;
-        unsigned long int counter = 0;
+        unsigned int counter = 0;
         while (lSeeker != nullptr && rSeeker != nullptr)
         {
             if(*(lSeeker->p)!=*(rSeeker->p))//if the points aren't equal, the clusters aren't equal
@@ -208,8 +208,8 @@ namespace Clustering {
     Cluster &Cluster::operator+=(const Cluster &rhs) {
         LNodePtr lSeeker = head;
         LNodePtr rSeeker = rhs.head;
-        unsigned long int y;
-        for (unsigned long int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+        unsigned int y;
+        for (unsigned int x = 0; x < rhs.size; x++)//iterate through the rhs's points
         {
             for (y = 0; y < size; y++)//compare against all the lhs's points
             {
@@ -228,9 +228,9 @@ namespace Clustering {
     Cluster &Cluster::operator-=(const Cluster &rhs) {
         LNodePtr lSeeker = head;
         LNodePtr rSeeker = rhs.head;
-        for (unsigned long int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+        for (unsigned int x = 0; x < rhs.size; x++)//iterate through the rhs's points
         {
-            for (unsigned long int y = 0; y < size; y++)//compare against all the lhs's points
+            for (unsigned int y = 0; y < size; y++)//compare against all the lhs's points
             {
                 if (lSeeker->p ==
                     rSeeker->p)//if we found the current point in the lhs and rhs, pull it from the lhs and break out of the loop
@@ -336,7 +336,7 @@ namespace Clustering {
         centroidValidity = true;
     }
 
-    double Cluster::intraClusterDistance() const
+    double Cluster::intraClusterDistance()
     {
         LNodePtr outer, inner;
         double distance = 0;
@@ -346,11 +346,12 @@ namespace Clustering {
         if (size == 2)//case for 2 points
             return head->p->distanceTo(*(head->next->p));
 
+        unsigned int edges=getClusterEdges();
         for (outer = head; outer->next->next != nullptr; outer = outer->next)//case for 3 or more
         {
             for (inner = outer->next; inner != nullptr; inner = inner->next)//start at outer's current location to prevent counting the same pairs twice
             {
-                distance += (outer->p->distanceTo(*(inner->p))) / size;
+                distance += (outer->p->distanceTo(*(inner->p))) / edges;
             }
         }
         return distance;
@@ -359,17 +360,23 @@ namespace Clustering {
 
     double interClusterDistance(Cluster &lhs, Cluster &rhs)
     {
-        if(lhs.__centroid== nullptr||rhs.__centroid== nullptr)
+        unsigned int edges=lhs.size*rhs.size;
+        LNodePtr outer, inner;
+        double distance=0;
+
+        for(outer=lhs.head;outer!= nullptr;outer=outer->next)
         {
-            std::cout<<"Error, one or both target clusters lack centroids"<<std::endl;
-            return 0.0;
+            for(inner=rhs.head;inner!= nullptr;inner=inner->next)
+            {
+                distance += (outer->p->distanceTo(*(inner->p))) / edges;
+            }
         }
-        return lhs.__centroid->distanceTo(*(rhs.__centroid));
+        return distance;
     }
 
     void Cluster::pickPoints(int k, PointPtr *pointArray)
     {
-        unsigned long int spread=size/k,x,index=0;
+        unsigned int spread=size/k,x,index=0;
         LNodePtr seeker;
         for(x=0,seeker=head;seeker!= nullptr,index<k;x++,seeker=seeker->next)//iterate through nodes
         {

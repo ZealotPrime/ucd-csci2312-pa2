@@ -23,7 +23,7 @@ namespace Clustering
 
     class Cluster
     {
-        unsigned long int size;
+        unsigned int size;
         LNodePtr head;
         unsigned int id;
         bool releasePoints;
@@ -64,7 +64,7 @@ namespace Clustering
         const Point& getCentroid(){return *__centroid;}
         const bool centrodValid(){return centroidValidity;}
         const unsigned long int getSize(){return size;}
-        unsigned long int getClusterEdges(){return size * (size - 1) / 2;}
+        unsigned int getClusterEdges(){return size * (size - 1) / 2;}
 
         friend unsigned int getInterClusterEdges(Cluster&, Cluster&);
         PointPtr& getCurrentPoint(){return currentPoint;}
@@ -72,7 +72,7 @@ namespace Clustering
 
         //computation functions
         void computeCentroid();
-        double intraClusterDistance()const;
+        double intraClusterDistance();
         friend double interClusterDistance(Cluster &lhs,Cluster &rhs);
         void pickPoints(int k, PointPtr *pointArray);
 
