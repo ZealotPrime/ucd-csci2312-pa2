@@ -9,7 +9,7 @@ namespace Clustering
     class KMeans
     {
     public:
-        static constexpr double SCORE_DIFF_THRESHOLD=.001;
+        static constexpr double SCORE_DIFF_THRESHOLD=.0001;
         static constexpr int STATLEVEL = 2;
     private:
         Cluster *clusterArray;

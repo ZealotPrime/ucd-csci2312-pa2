@@ -102,8 +102,6 @@ namespace Clustering
         }
         timer=clock()-timer;
         std::cout<<((double)timer/CLOCKS_PER_SEC)<<" seconds for all iterations, "<<((double)timer/CLOCKS_PER_SEC)/(numberOfIterations)<<" second average time per iteration"<<std::endl;
-        if(STATLEVEL)
-            clusterStats();
     }
 
     void KMeans::outputPoints(std::ostream &os)
