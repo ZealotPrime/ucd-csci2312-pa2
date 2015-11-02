@@ -11,7 +11,7 @@ namespace Clustering {
         size = 0;
         __centroid = nullptr;
         *this = inCluster;
-        id = setID();
+        id = newID();
         releasePoints = false;
 
 
@@ -20,7 +20,7 @@ namespace Clustering {
     Cluster::Cluster(bool release) {
         size = 0;
         head = nullptr;
-        id = setID();
+        id = newID();
         releasePoints = release;
         __centroid = nullptr;
         centroidValidity = false;
@@ -297,7 +297,7 @@ namespace Clustering {
     }
 
 
-    unsigned int Cluster::setID()
+    unsigned int Cluster::newID()
     {
         static unsigned int id = 0;
         id++;

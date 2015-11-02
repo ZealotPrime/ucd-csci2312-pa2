@@ -6,12 +6,13 @@
 #define CLUSTERING_POINT_H
 
 #include <iostream>
-
+#include <vector>
 namespace Clustering {
 
     class Point {
         int dim;        // number of dimensions of the point
-        double *values; // values of the point's dimensions
+         std::vector<double> values; // values of the point's dimensions
+        unsigned int id;//this point's id number
 
     public:
         Point(int);
@@ -56,6 +57,9 @@ namespace Clustering {
 
         friend std::ostream &operator<<(std::ostream &, const Point &);
         friend std::istream &operator>>(std::istream &, Point &);
+
+    private:
+        static unsigned int newID();
     };
 
 }

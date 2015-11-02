@@ -5,13 +5,15 @@
 #include "Point.h"
 #include <cmath> //needed for distanceTo func
 #include "Clustering.h"
+#include <vector>
 #include <iostream>
 #include <string>
 
 Clustering::Point::Point(int dimSize)
 {
     dim=dimSize;
-    values=new double[dim];
+    values.resize(dim);
+    id=newID();
     for(int x=0;x<dim;x++)
         values[x]=0;
 }
@@ -19,29 +21,28 @@ Clustering::Point::Point(int dimSize)
 Clustering::Point::Point(int dimSize, double *inArray)
 {
     dim=dimSize;
-    values=new double[dim];
+    id=newID();
     for(int x=0;x<dim;x++)
         values[x]=inArray[x];
 }
 
 Clustering::Point::Point(const Clustering::Point &inPoint)
 {
-    dim=inPoint.dim;
-    values=new double[dim];
-    for(int x=0;x<dim;x++)
-        values[x]=inPoint.values[x];
+    *this=inPoint;
 }
 
 Clustering::Point &Clustering::Point::operator=(const Clustering::Point &inPoint)
 {
+    dim=inPoint.dim;
+    values.resize(dim);
     for(int x=0;x<dim;x++)
         values[x]=inPoint.values[x];
+    id=inPoint.id;
     return *this;
 }
 
 Clustering::Point::~Point()
 {
-    delete[] values;
 }
 
 void Clustering::Point::setValue(int index, double newVal)
@@ -49,7 +50,8 @@ void Clustering::Point::setValue(int index, double newVal)
     values[index]=newVal;
 }
 
-double Clustering::Point::getValue(int index) const {
+double Clustering::Point::getValue(int index) const
+{
     return values[index];
 }
 
@@ -209,5 +211,12 @@ namespace Clustering { // I discovered the need to add this after I had written 
         }
 
         return is;
+    }
+
+    unsigned int Point::newID()
+    {
+        static unsigned int id = 0;
+        id++;
+        return id;
     }
 }

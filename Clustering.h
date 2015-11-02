@@ -101,7 +101,7 @@ namespace Clustering
         friend const Cluster operator-(const Cluster &lhs, const PointPtr &rhs);
 
     private:
-        unsigned int setID(); //returns a unique ID each time it's called
+        unsigned int newID(); //returns a unique ID each time it's called
 
 
 
