@@ -26,18 +26,9 @@ namespace Clustering {
         centroidValidity = false;
     }
 
-    Cluster &Cluster::operator=(const Cluster &inCluster) {
-        LNodePtr remote = inCluster.head;
-        while (size > 0) {
-            remove(head->p);
-        }
-        if (remote != nullptr) {
-            add(remote->p);
-            while (remote->next != nullptr) {
-                remote = remote->next;
-                add(remote->p);
-            }
-        }
+    Cluster &Cluster::operator=(const Cluster &inCluster)
+    {
+        points.assign(inCluster.points.begin(),inCluster.points.end());//copy in the other cluster's points
 
         if (inCluster.__centroid == nullptr)//if the target doesn't have a centroid,
         {
@@ -54,97 +45,55 @@ namespace Clustering {
         return *this;
     }
 
-    Cluster::~Cluster() {
-        PointPtr temp;
-        while (size > 0) {
-            if (releasePoints)//if relasePoints set, delete point and node
-            {
-                temp = head->p;
-                remove(head->p);
-                delete temp;
-            }
-            else
-                remove(head->p);//otherwise just remove the node
-        }
+    Cluster::~Cluster()
+    {
         if (__centroid != nullptr)//delete centroid if it exists
             delete __centroid;
     }
 
-    void Cluster::add(const PointPtr &inPoint) {
-        LNodePtr seeker = head, trailer = head, newNode = new LNode;
-
-        newNode->next = nullptr;//initialize new node
-        newNode->p = inPoint;
-        centroidValidity = false;
-        if (size == 0)//if cluster currently empty, newNode is head
+    void Cluster::add(const Point &inPoint)
+    {
+        auto seeker=points.begin();
+        auto trailer=points.before_begin();
+        if(size==0)
         {
-            head = newNode;
-            size++;
+            points.push_front(inPoint);
+            ++size;
             return;
         }
-        if (head->next == nullptr)//if cluster has 1 point
+        for(;seeker!=points.end();trailer=seeker++)
         {
-            if (*(head->p) < *(inPoint))//put new point at end if it's bigger
+            if(inPoint<*seeker)
             {
-                head->next = newNode;
-                size++;
-                return;
-            }
-            else//put it in front if it's not
-            {
-                newNode->next = head->next;
-                head = newNode;
-                size++;
+                points.insert_after(trailer,inPoint);
+                ++size;
                 return;
             }
         }
-
-        if (*(head->p) > *(inPoint))//if the new element should be 1st
-        {
-            newNode->next = head;
-            head = newNode;
-            size++;
-            return;
-        }
-        seeker=head->next;
-        while (seeker != nullptr)//seek to appropriate spot if more than 1
-        {
-            if (*(seeker->p) >= *(inPoint))//if it's smaller or the same, add it in front
-            {
-                newNode->next = trailer->next;
-                trailer->next = newNode;
-                size++;
-                return;
-            }
-            trailer = seeker;
-            seeker = seeker->next;
-        }
-        trailer->next = newNode;//if it hasn't been added yet, it must go at the end
-        size++;
+        points.insert_after(trailer,inPoint);//if the code made it this far, it goes at the end
     }
 
-    const PointPtr &Cluster::remove(const PointPtr &target) {
-        LNodePtr seeker = head, trailer = head;
+    const Point &Cluster::remove(const Point &target)
+    {
         if (size == 0)
             return target; //return target if cluster empty
-        while (seeker->p != target && seeker->next != nullptr)//look for target point
+        auto seeker=points.begin();
+        auto trailer=points.before_begin();
+        for(;seeker!=points.end();trailer=seeker++)
         {
-            trailer = seeker;
-            seeker = seeker->next;
-        }
-        if (seeker->p == target)//if it was found, kill it
-        {
-            trailer->next = seeker->next;
-            if (seeker == head)
+            if(*seeker==target)
             {
-                head = seeker->next;
-                previousNode=head;
+                points.erase_after(trailer);
+                --size;
+                return target;
             }
-            delete seeker;
-            size--;
-            centroidValidity = false;
         }
-        return target;
+        if(*seeker==target)//test the final element
+        {
+            points.erase_after(trailer);
+            --size;
+        }
+         return target;
     }
 
     std::ostream &operator<<(std::ostream &os, const Cluster &cluster) {
@@ -162,7 +111,7 @@ namespace Clustering {
     std::istream &operator>>(std::istream &istream, Cluster &cluster) {
         int dims = 1;
         std::string worker;
-        PointPtr newPoint;
+
 
         getline(istream, worker, '\n');//get first line
         istream.seekg(istream.beg);//return to beginning of string after reading in the string to count dims
@@ -171,13 +120,12 @@ namespace Clustering {
         for (int x = 0; x < worker.size(); x++)//count number of delimiters to determine how many dimentions point has
             if (worker[x] == Clustering::DELIM)
                 dims++;
-
+        Point newPoint(dims);
 
         while (getline(istream, worker, '\n'))//gets lines from the stream, puts them into a string
         {
             workStream.str(worker);//makes the string into a stream to send to point
-            newPoint = new Point(dims);//create point
-            workStream >> *newPoint;//have it set data using the stream
+            workStream >> newPoint;//have it set data using the stream
             cluster.add(newPoint);
             workStream.clear();
         }
@@ -188,40 +136,32 @@ namespace Clustering {
     bool operator==(const Cluster &lhs, const Cluster &rhs) {
         if (lhs.size == 0 && rhs.size == 0)
             return true;//clusters equal if they're both empty
-        LNodePtr lSeeker = lhs.head;
-        LNodePtr rSeeker = rhs.head;
-        unsigned int counter = 0;
-        while (lSeeker != nullptr && rSeeker != nullptr)
-        {
-            if(*(lSeeker->p)!=*(rSeeker->p))//if the points aren't equal, the clusters aren't equal
-                return false;
-            lSeeker = lSeeker->next;
-            rSeeker = rSeeker->next;
-            counter++;
-        }
-        if (counter == lhs.size && counter == rhs.size &&
-            lSeeker->p == rSeeker->p)//if testing final element and final element is the same
-            return true;//then it's equal
-        return false;//otherwise it's not
+        if(lhs.size!=rhs.size)
+            return false;//clusters not equal if they're different sizes
+
     }
 
-    Cluster &Cluster::operator+=(const Cluster &rhs) {
-        LNodePtr lSeeker = head;
-        LNodePtr rSeeker = rhs.head;
-        unsigned int y;
-        for (unsigned int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+    Cluster &Cluster::operator+=(const Cluster &rhs)
+    {
+        auto remote=rhs.points.before_begin();
+        auto local=points.before_begin();
+        while(remote!=rhs.points.end())
         {
-            for (y = 0; y < size; y++)//compare against all the lhs's points
+            ++remote;
+            local=points.before_begin();
+            while(local!=points.end())
             {
-                if (lSeeker->p == rSeeker->p)//if we found the current point in the lhs already, break out of the loop
+                ++local;
+                if(*local==*remote)//if we already have it, don't add it
                     break;
-                lSeeker = lSeeker->next;
+                if(*local>*remote)//if we're past the point where it should be, then we must not have it
+                {
+                    add(*remote);
+                    break;
+                }
             }
-            if (y == size)//if we didn't find it, add it.
-                add(rSeeker->p);
-            rSeeker = rSeeker->next;//check the next one for matches
-            lSeeker = head;
         }
+
         return *this;
     }
 

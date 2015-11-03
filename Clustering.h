@@ -6,6 +6,7 @@
 #define CLUSTERING_CLUSTER_H
 
 #include "Point.h"
+#include <forward_list>
 
 namespace Clustering
 {
@@ -25,6 +26,8 @@ namespace Clustering
     {
         unsigned int size;
         LNodePtr head;
+
+        std::forward_list<Point> points;
         unsigned int id;
         bool releasePoints;
         PointPtr __centroid;
@@ -44,17 +47,17 @@ namespace Clustering
         ~Cluster();
 
         // Set functions: They allow calling c1.add(c2.remove(p));
-        void add(const PointPtr &);
-        const PointPtr &remove(const PointPtr &);
+        void add(const Point &);
+        const Point &remove(const Point &);
         void setCentroid(const Point&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
         void setReleasePoints(bool release){releasePoints=release;}
         class Move
         {
         public:
-            Move(const PointPtr &target,Cluster *from,Cluster *to){perform(target,from,to);};
+            Move(const Point &target,Cluster *from,Cluster *to){perform(target,from,to);};
         private:
-            void perform(const PointPtr &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
+            void perform(const Point &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
         };
         void goToPreviousNode();
 
