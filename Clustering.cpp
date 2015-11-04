@@ -165,46 +165,41 @@ namespace Clustering {
         return *this;
     }
 
-    Cluster &Cluster::operator-=(const Cluster &rhs) {
-        LNodePtr lSeeker = head;
-        LNodePtr rSeeker = rhs.head;
-        for (unsigned int x = 0; x < rhs.size; x++)//iterate through the rhs's points
+    Cluster &Cluster::operator-=(const Cluster &rhs)
+    {
+        auto remote=rhs.points.before_begin();
+        auto local=points.before_begin();
+        while(remote!=rhs.points.end())
         {
-            for (unsigned int y = 0; y < size; y++)//compare against all the lhs's points
+            ++remote;
+            local=points.before_begin();
+            while(local!=points.end())
             {
-                if (lSeeker->p ==
-                    rSeeker->p)//if we found the current point in the lhs and rhs, pull it from the lhs and break out of the loop
+                ++local;
+                if(*local==*remote)//if we have it, get rid of it it
                 {
-                    remove(lSeeker->p);
+                    remove(*local);
                     break;
                 }
-                lSeeker = lSeeker->next;
+                if(*local>*remote)//if we're past the point where it should be, then we must not have it
+                {
+                    break;
+                }
             }
-            rSeeker = rSeeker->next;//check the next one for matches
-            lSeeker = head;
         }
+
         return *this;
     }
 
     Cluster &Cluster::operator+=(const Point &rhs)
     {
-        PointPtr inPoint = new Point(rhs);
-        add(inPoint);
+        add(rhs);
         return *this;
     }
 
     Cluster &Cluster::operator-=(const Point &rhs)
     {
-        LNodePtr seeker = head;
-        for (; seeker!= nullptr; seeker = seeker->next)
-        {
-            if (*(seeker->p) == rhs)
-            {
-                remove(seeker->p);
-                break;
-            }
-        }
-
+        remove(rhs);
         return *this;
     }
 
@@ -222,14 +217,14 @@ namespace Clustering {
         return output;
     }
 
-    const Cluster operator+(const Cluster &lhs, const PointPtr &rhs)
+    const Cluster operator+(const Cluster &lhs, const Point &rhs)
     {
         Cluster output(lhs);
         output.add(rhs);
         return lhs;
     }
 
-    const Cluster operator-(const Cluster &lhs, const PointPtr &rhs)
+    const Cluster operator-(const Cluster &lhs, const Point &rhs)
     {
         Cluster output(lhs);
         output.remove(rhs);
@@ -259,19 +254,20 @@ namespace Clustering {
             std::cout << "Cluster empty, cannot compute" << std::endl;
             return;
         }
-        LNodePtr seeker;
         if (__centroid == nullptr)//if centroid hasn't been built yet,
         {
-            __centroid = new Point(head->p->getDims());//make one based on existing point dimentionality.
+            points.begin()->getDims());//make one based on existing point dimentionality.
         }
         else
             for (int x = 0; x < __centroid->getDims(); x++)//zero out the centroid
             {
                 __centroid->setValue(x, 0);
             }
-        for (seeker = head; seeker != nullptr; seeker = seeker->next)
+        auto seeker=points.before_begin();
+        while(seeker!=points.end())
         {
-            *__centroid += (*(seeker->p) / size);
+            ++seeker;
+            __centroid+=*seeker/size;
         }
         centroidValidity = true;
     }

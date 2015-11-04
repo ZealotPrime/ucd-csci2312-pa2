@@ -100,8 +100,8 @@ namespace Clustering
         friend const Cluster operator+(const Cluster &lhs, const Cluster &rhs);
         friend const Cluster operator-(const Cluster &lhs, const Cluster &rhs);
 
-        friend const Cluster operator+(const Cluster &lhs, const PointPtr &rhs);
-        friend const Cluster operator-(const Cluster &lhs, const PointPtr &rhs);
+        friend const Cluster operator+(const Cluster &lhs, const Point &rhs);
+        friend const Cluster operator-(const Cluster &lhs, const Point &rhs);
 
     private:
         unsigned int newID(); //returns a unique ID each time it's called
