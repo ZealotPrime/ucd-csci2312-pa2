@@ -274,7 +274,7 @@ namespace Clustering {
 
     double Cluster::intraClusterDistance()
     {
-        LNodePtr outer, inner;
+        auto outer=points.before_begin(), inner=points.before_begin();
         double distance = 0;
 
         if (size < 2)//case for 0 or 1 points
@@ -283,11 +283,14 @@ namespace Clustering {
             return head->p->distanceTo(*(head->next->p));
 
         unsigned int edges=getClusterEdges();
-        for (outer = head; outer->next->next != nullptr; outer = outer->next)//case for 3 or more
+        while(outer!=points.end())//case for 3 or more
         {
-            for (inner = outer->next; inner != nullptr; inner = inner->next)//start at outer's current location to prevent counting the same pairs twice
+            ++outer;
+            inner=outer;
+            while(inner!=points.end())
             {
-                distance += (outer->p->distanceTo(*(inner->p))) / edges;
+                ++inner;
+                distance += (outer->distanceTo(*(inner)) / edges;
             }
         }
         return distance;
@@ -297,14 +300,16 @@ namespace Clustering {
     double interClusterDistance(Cluster &lhs, Cluster &rhs)
     {
         unsigned int edges=lhs.size*rhs.size;
-        LNodePtr outer, inner;
+        auto left=lhs.points.before_begin(), right=rhs.points.before_begin();;
         double distance=0;
 
-        for(outer=lhs.head;outer!= nullptr;outer=outer->next)
+        while(left!=lhs.points.end())
         {
-            for(inner=rhs.head;inner!= nullptr;inner=inner->next)
+            ++left;
+            while(right!=rhs.points.end())
             {
-                distance += (outer->p->distanceTo(*(inner->p))) / edges;
+                ++right;
+                distance += (left->distanceTo(*(right))) / edges;
             }
         }
         return distance;
