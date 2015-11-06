@@ -18,6 +18,7 @@ namespace Clustering
         unsigned long int numberOfIterations;
     public:
         KMeans(int k,std::istream &is);
+        ~KMeans();
         void computeClusteringScore();
         void recalculateInvalidCentroids();
         void iterateOnce();

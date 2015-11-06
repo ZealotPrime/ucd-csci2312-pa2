@@ -12,7 +12,6 @@ namespace Clustering
         clock_t timer;
         PointPtr initialCentroids[k];
         clusterArray= new Cluster[k];//create array of k clusters
-        clusterArray[0].setReleasePoints(true);//set the master to release it's points
         this->k=k;
         scoreDiff =SCORE_DIFF_THRESHOLD+1;
         score=1000000.0;
@@ -27,6 +26,11 @@ namespace Clustering
         {
             clusterArray[x].setCentroid(*(initialCentroids[x]));//set each cluster's respective centroid from the generated centroids
         }
+    }
+
+    KMeans::~KMeans()
+    {
+        delete[] clusterArray;
     }
 
     void KMeans::computeClusteringScore()
@@ -119,4 +123,6 @@ namespace Clustering
         }
         std::cout<<std::endl;
     }
+
+
 }

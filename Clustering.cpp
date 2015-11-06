@@ -12,23 +12,19 @@ namespace Clustering {
         __centroid = nullptr;
         *this = inCluster;
         id = newID();
-        releasePoints = false;
-
-
     }
 
-    Cluster::Cluster(bool release) {
+    Cluster::Cluster()
+    {
         size = 0;
-        head = nullptr;
         id = newID();
-        releasePoints = release;
         __centroid = nullptr;
         centroidValidity = false;
     }
 
     Cluster &Cluster::operator=(const Cluster &inCluster)
     {
-        points.assign(inCluster.points.begin(),inCluster.points.end());//copy in the other cluster's points
+        points=inCluster.points;//copy in the other cluster's points
 
         if (inCluster.__centroid == nullptr)//if the target doesn't have a centroid,
         {
@@ -100,11 +96,11 @@ namespace Clustering {
         if (cluster.size == 0) {
             return os;
         }
-        LNodePtr seeker = cluster.head;
-        do {
-            os << *(seeker->p) << " : " << cluster.id << std::endl;
-            seeker = seeker->next;
-        } while (seeker != nullptr);
+        auto seeker=cluster.points.before_begin();
+        while(seeker!=cluster.points.end())
+        {
+            os << *seeker << " : " << cluster.id << std::endl;
+        }
         return os;
     }
 
@@ -138,7 +134,16 @@ namespace Clustering {
             return true;//clusters equal if they're both empty
         if(lhs.size!=rhs.size)
             return false;//clusters not equal if they're different sizes
-
+        auto left=lhs.points.before_begin();
+        auto right=rhs.points.before_begin();
+        while(left!=lhs.points.end())
+        {
+            ++left;
+            ++right;
+            if(*left!=*right)
+                return false;//if one of the points don't match, then the clusters don't
+        }
+        return true;//otherwise they must be the same
     }
 
     Cluster &Cluster::operator+=(const Cluster &rhs)
@@ -267,7 +272,7 @@ namespace Clustering {
         while(seeker!=points.end())
         {
             ++seeker;
-            __centroid+=*seeker/size;
+            *__centroid+=*seeker/size;
         }
         centroidValidity = true;
     }
@@ -275,13 +280,13 @@ namespace Clustering {
     double Cluster::intraClusterDistance()
     {
         auto outer=points.before_begin(), inner=points.before_begin();
-        double distance = 0;
 
         if (size < 2)//case for 0 or 1 points
             return 0.0;
         if (size == 2)//case for 2 points
-            return head->p->distanceTo(*(head->next->p));
+            return outer++->distanceTo(*outer);
 
+        double distance = 0;
         unsigned int edges=getClusterEdges();
         while(outer!=points.end())//case for 3 or more
         {
@@ -328,44 +333,6 @@ namespace Clustering {
             pointArray[index]=&*points.begin();
     }
 
-
-
-
-    PointPtr Cluster::getNextPoint(bool begin)
-    {
-        if(head== nullptr)
-        {
-            currentPoint= nullptr;
-            currentNode= nullptr;
-            previousNode= nullptr;
-            return currentPoint;
-        }
-        if(begin)//returns first point if begin is true
-        {
-            currentPoint=head->p;
-            currentNode=head;
-            previousNode=head;
-            return currentPoint;
-        }
-        if(currentNode!= nullptr)//if we're not past the last node already,
-        {
-            previousNode=currentNode;//store the current before we go on in case we need it later
-            currentNode=currentNode->next;//go to the next one.
-            if(currentNode!= nullptr)//if it we still aren't past the end,
-            {
-                currentPoint=currentNode->p;//then set and return the point we're on to the current node's
-                return currentPoint;
-            }
-        }
-        currentPoint= nullptr;
-        return nullptr;
-    }
-
-    void Cluster::goToPreviousNode()
-    {
-        currentNode=previousNode;
-        currentPoint=nullptr;
-    }
 
     unsigned int getInterClusterEdges(Cluster &c1, Cluster &c2)
     {

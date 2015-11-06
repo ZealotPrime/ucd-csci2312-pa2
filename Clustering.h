@@ -25,22 +25,13 @@ namespace Clustering
     class Cluster
     {
         unsigned int size;
-        LNodePtr head;
-
-        std::forward_list<Point> points;
         unsigned int id;
-        bool releasePoints;
+        std::forward_list<Point> points;
         PointPtr __centroid;
         bool centroidValidity;
-        PointPtr currentPoint;
-        LNodePtr currentNode;
-        LNodePtr previousNode;
 
     public:
-        Cluster() : Cluster(false) {};//default ctor.
-
-        Cluster(bool);
-
+        Cluster();//default ctor.
         // The big three: cpy ctor, overloaded operator=, dtor
         Cluster(const Cluster &);
         Cluster &operator=(const Cluster &);
@@ -51,7 +42,6 @@ namespace Clustering
         const Point &remove(const Point &);
         void setCentroid(const Point&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
-        void setReleasePoints(bool release){releasePoints=release;}
         class Move
         {
         public:
@@ -59,7 +49,6 @@ namespace Clustering
         private:
             void perform(const Point &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
         };
-        void goToPreviousNode();
 
 
         //getters
@@ -70,8 +59,6 @@ namespace Clustering
         unsigned int getClusterEdges(){return size * (size - 1) / 2;}
 
         friend unsigned int getInterClusterEdges(Cluster&, Cluster&);
-        PointPtr& getCurrentPoint(){return currentPoint;}
-        PointPtr getNextPoint(bool begin);
 
         //computation functions
         void computeCentroid();
