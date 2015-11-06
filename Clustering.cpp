@@ -318,14 +318,14 @@ namespace Clustering {
     void Cluster::pickPoints(int k, PointPtr *pointArray)
     {
         unsigned int spread=size/k,x,index=0;
-        LNodePtr seeker;
-        for(x=0,seeker=head;seeker!= nullptr,index<k;x++,seeker=seeker->next)//iterate through nodes
+        auto seeker=points.before_begin();
+        for(x=0;seeker!= points.end(),index<k;x++)//iterate through nodes
         {
             if(x%spread==0)//if the index of the node we're on is a multiple of the spread, add it's point to the array
-                pointArray[index++]=seeker->p;
+                pointArray[index++]=&*seeker;
         }
         for(;index<k;index++)//add dummy points in case k>size
-            pointArray[index]=head->p;
+            pointArray[index]=&*points.begin();
     }
 
 
