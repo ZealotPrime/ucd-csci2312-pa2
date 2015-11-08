@@ -261,7 +261,7 @@ namespace Clustering {
         }
         if (__centroid == nullptr)//if centroid hasn't been built yet,
         {
-            points.begin()->getDims());//make one based on existing point dimentionality.
+            points.begin()->getDims();//make one based on existing point dimentionality.
         }
         else
             for (int x = 0; x < __centroid->getDims(); x++)//zero out the centroid
@@ -295,7 +295,7 @@ namespace Clustering {
             while(inner!=points.end())
             {
                 ++inner;
-                distance += (outer->distanceTo(*(inner)) / edges;
+                distance += outer->distanceTo(*inner) / edges;
             }
         }
         return distance;

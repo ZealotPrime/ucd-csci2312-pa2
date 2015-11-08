@@ -34,9 +34,8 @@ Clustering::Point::Point(const Clustering::Point &inPoint)
 Clustering::Point &Clustering::Point::operator=(const Clustering::Point &inPoint)
 {
     dim=inPoint.dim;
-    values.resize(dim);
-    for(int x=0;x<dim;x++)
-        values[x]=inPoint.values[x];
+    //values.resize(dim);
+    values=inPoint.values;
     id=inPoint.id;
     return *this;
 }

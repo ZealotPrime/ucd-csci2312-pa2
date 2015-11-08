@@ -24,6 +24,7 @@ namespace Clustering
 
     class Cluster
     {
+        friend class KMeans;
         unsigned int size;
         unsigned int id;
         std::forward_list<Point> points;

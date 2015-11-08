@@ -61,21 +61,22 @@ namespace Clustering
     void KMeans::iterateOnce()
     {
         double tempDistance=0;
-        bool nextPoint=false;
+        std::forward_list<Point>::iterator seeker,trailer;
         clock_t timer=clock();
             for (int containingCluster = 0; containingCluster < k; containingCluster++)//go through each cluster
             {
                 if(STATLEVEL>2)
                     clusterStats();
-                for (clusterArray[containingCluster].getNextPoint(true); clusterArray[containingCluster].getCurrentPoint() != nullptr; clusterArray[containingCluster].getNextPoint(false))//and each of it's points
+                for (seeker=clusterArray[containingCluster].points.before_begin(); seeker!=clusterArray[containingCluster].points.before_begin();)//and each of it's points
                 {
-                    tempDistance = clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
+                    trailer=seeker++;
+                    tempDistance = seeker->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
                     for (int targetCluster = ((numberOfIterations==0)?(containingCluster+1):(containingCluster==0?1:0)); targetCluster < k; (++targetCluster==containingCluster?targetCluster++:1))//test against the other clusters
                     {// the question mark operator here is to make the system use a more efficient 1 way version of the algorithm if it's the first loop
-                        if (clusterArray[containingCluster].getCurrentPoint()->distanceTo(clusterArray[targetCluster].getCentroid()) < tempDistance)//if it's closer to the target cluster
+                        if (seeker->distanceTo(clusterArray[targetCluster].getCentroid()) < tempDistance)//if it's closer to the target cluster
                         {
-                            Cluster::Move(clusterArray[containingCluster].getCurrentPoint(), &(clusterArray[containingCluster]), &(clusterArray[targetCluster]));//move it
-                            clusterArray[containingCluster].goToPreviousNode();
+                            Cluster::Move(*seeker, &(clusterArray[containingCluster]), &(clusterArray[targetCluster]));//move it
+                            seeker=trailer;
                             break;
                         }
                     }
