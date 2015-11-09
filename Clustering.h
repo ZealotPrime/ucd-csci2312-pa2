@@ -13,14 +13,7 @@ namespace Clustering
 
     static const char DELIM=',';
     typedef Point *PointPtr;
-    typedef struct LNode *LNodePtr;
 
-
-    struct LNode
-    {
-        PointPtr p;
-        LNodePtr next;
-    };
 
     class Cluster
     {
@@ -38,9 +31,9 @@ namespace Clustering
         Cluster &operator=(const Cluster &);
         ~Cluster();
 
-        // Set functions: They allow calling c1.add(c2.remove(p));
+        // Set functions
         void add(const Point &);
-        const Point &remove(const Point &);
+        void remove(const Point &);
         void setCentroid(const Point&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
         class Move
@@ -48,7 +41,11 @@ namespace Clustering
         public:
             Move(const Point &target,Cluster *from,Cluster *to){perform(target,from,to);};
         private:
-            void perform(const Point &target,Cluster *from,Cluster *to) { to->add(from->remove(target)); }
+            void perform(const Point &target,Cluster *from,Cluster *to)
+            {
+                to->add(target);
+                from->remove(target);
+            }
         };
 
 
@@ -65,7 +62,7 @@ namespace Clustering
         void computeCentroid();
         double intraClusterDistance();
         friend double interClusterDistance(Cluster &lhs,Cluster &rhs);
-        void pickPoints(int k, PointPtr *pointArray);
+        void pickPoints(int k, PointPtr* pointArray);
 
         // Overloaded operators
         // IO

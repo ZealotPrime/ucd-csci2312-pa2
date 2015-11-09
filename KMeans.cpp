@@ -21,7 +21,8 @@ namespace Clustering
         is>>clusterArray[0];//load teh dataz into master cluster
         timer=clock()-timer;
         std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
-        clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
+        //std::cout<<"Loaded the following points: "<<std::endl<<clusterArray[0]<<std::endl;
+        //clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
         {
             clusterArray[x].setCentroid(*(initialCentroids[x]));//set each cluster's respective centroid from the generated centroids
@@ -67,9 +68,8 @@ namespace Clustering
             {
                 if(STATLEVEL>2)
                     clusterStats();
-                for (seeker=clusterArray[containingCluster].points.before_begin(); seeker!=clusterArray[containingCluster].points.before_begin();)//and each of it's points
+                for (seeker=clusterArray[containingCluster].points.begin(); seeker!=clusterArray[containingCluster].points.end();trailer=seeker++)//and each of it's points
                 {
-                    trailer=seeker++;
                     tempDistance = seeker->distanceTo(clusterArray[containingCluster].getCentroid());//get distance to current centroid
                     for (int targetCluster = ((numberOfIterations==0)?(containingCluster+1):(containingCluster==0?1:0)); targetCluster < k; (++targetCluster==containingCluster?targetCluster++:1))//test against the other clusters
                     {// the question mark operator here is to make the system use a more efficient 1 way version of the algorithm if it's the first loop

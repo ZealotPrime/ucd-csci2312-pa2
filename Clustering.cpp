@@ -67,12 +67,13 @@ namespace Clustering {
             }
         }
         points.insert_after(trailer,inPoint);//if the code made it this far, it goes at the end
+        ++size;
     }
 
-    const Point &Cluster::remove(const Point &target)
+    void Cluster::remove(const Point &target)
     {
         if (size == 0)
-            return target; //return target if cluster empty
+            return; //return target if cluster empty
         auto seeker=points.begin();
         auto trailer=points.before_begin();
         for(;seeker!=points.end();trailer=seeker++)
@@ -81,23 +82,18 @@ namespace Clustering {
             {
                 points.erase_after(trailer);
                 --size;
-                return target;
+                return;
             }
         }
-        if(*seeker==target)//test the final element
-        {
-            points.erase_after(trailer);
-            --size;
-        }
-         return target;
+        return;
     }
 
     std::ostream &operator<<(std::ostream &os, const Cluster &cluster) {
         if (cluster.size == 0) {
             return os;
         }
-        auto seeker=cluster.points.before_begin();
-        while(seeker!=cluster.points.end())
+
+        for(auto seeker=cluster.points.begin();seeker!=cluster.points.end();++seeker)
         {
             os << *seeker << " : " << cluster.id << std::endl;
         }
@@ -134,12 +130,10 @@ namespace Clustering {
             return true;//clusters equal if they're both empty
         if(lhs.size!=rhs.size)
             return false;//clusters not equal if they're different sizes
-        auto left=lhs.points.before_begin();
-        auto right=rhs.points.before_begin();
-        while(left!=lhs.points.end())
+        auto left=lhs.points.begin();
+        auto right=rhs.points.begin();
+        for(;left!=lhs.points.end();++left,++right)
         {
-            ++left;
-            ++right;
             if(*left!=*right)
                 return false;//if one of the points don't match, then the clusters don't
         }
@@ -148,45 +142,26 @@ namespace Clustering {
 
     Cluster &Cluster::operator+=(const Cluster &rhs)
     {
-        auto remote=rhs.points.before_begin();
-        auto local=points.before_begin();
-        while(remote!=rhs.points.end())
-        {
-            ++remote;
-            local=points.before_begin();
-            while(local!=points.end())
-            {
-                ++local;
-                if(*local==*remote)//if we already have it, don't add it
-                    break;
-                if(*local>*remote)//if we're past the point where it should be, then we must not have it
-                {
-                    add(*remote);
-                    break;
-                }
-            }
-        }
+        std::forward_list<Point> temp=rhs.points;
+        points.merge(temp);
 
         return *this;
     }
 
     Cluster &Cluster::operator-=(const Cluster &rhs)
     {
-        auto remote=rhs.points.before_begin();
-        auto local=points.before_begin();
-        while(remote!=rhs.points.end())
+        auto remote=rhs.points.begin();
+        auto local=points.begin();
+        for(;remote!=rhs.points.end();++remote)
         {
-            ++remote;
-            local=points.before_begin();
-            while(local!=points.end())
+            for(local=points.begin();local!=points.end();++local)
             {
-                ++local;
                 if(*local==*remote)//if we have it, get rid of it it
                 {
                     remove(*local);
                     break;
                 }
-                if(*local>*remote)//if we're past the point where it should be, then we must not have it
+                if(*local<*remote)//if we're past the point where it should be, then we must not have it
                 {
                     break;
                 }
@@ -261,42 +236,46 @@ namespace Clustering {
         }
         if (__centroid == nullptr)//if centroid hasn't been built yet,
         {
-            points.begin()->getDims();//make one based on existing point dimentionality.
+            __centroid=new Point(points.begin()->getDims());//make one based on existing point dimentionality.
         }
         else
             for (int x = 0; x < __centroid->getDims(); x++)//zero out the centroid
             {
                 __centroid->setValue(x, 0);
             }
-        auto seeker=points.before_begin();
+        auto seeker=points.begin();
         while(seeker!=points.end())
         {
-            ++seeker;
             *__centroid+=*seeker/size;
+            ++seeker;
         }
         centroidValidity = true;
     }
 
     double Cluster::intraClusterDistance()
     {
-        auto outer=points.before_begin(), inner=points.before_begin();
+        auto outer=points.begin(), inner=points.begin();
 
         if (size < 2)//case for 0 or 1 points
             return 0.0;
         if (size == 2)//case for 2 points
-            return outer++->distanceTo(*outer);
+            {
+            ++inner;
+            return outer->distanceTo(*inner);
+            }
 
         double distance = 0;
         unsigned int edges=getClusterEdges();
         while(outer!=points.end())//case for 3 or more
         {
-            ++outer;
             inner=outer;
+            ++inner;
             while(inner!=points.end())
             {
-                ++inner;
                 distance += outer->distanceTo(*inner) / edges;
+                ++inner;
             }
+            ++outer;
         }
         return distance;
     }
@@ -304,33 +283,33 @@ namespace Clustering {
 
     double interClusterDistance(Cluster &lhs, Cluster &rhs)
     {
-        unsigned int edges=lhs.size*rhs.size;
-        auto left=lhs.points.before_begin(), right=rhs.points.before_begin();;
+        unsigned int edges=getInterClusterEdges(lhs,rhs);
+        auto left=lhs.points.begin(), right=rhs.points.begin();
         double distance=0;
 
         while(left!=lhs.points.end())
         {
-            ++left;
             while(right!=rhs.points.end())
             {
+                distance += (left->distanceTo(*right)) / edges;
                 ++right;
-                distance += (left->distanceTo(*(right))) / edges;
             }
+            ++left;
         }
         return distance;
     }
 
-    void Cluster::pickPoints(int k, PointPtr *pointArray)
+    void Cluster::pickPoints(int k, PointPtr pointArray[])
     {
         unsigned int spread=size/k,x,index=0;
-        auto seeker=points.before_begin();
-        for(x=0;seeker!= points.end(),index<k;x++)//iterate through nodes
+        auto seeker=points.begin();
+        for(x=0;seeker!= points.end(),index<k;x++,++seeker)//iterate through nodes
         {
             if(x%spread==0)//if the index of the node we're on is a multiple of the spread, add it's point to the array
-                pointArray[index++]=&*seeker;
+                pointArray[index++]=&(*seeker);
         }
         for(;index<k;index++)//add dummy points in case k>size
-            pointArray[index]=&*points.begin();
+            pointArray[index]=&*(points.end());
     }
 
 

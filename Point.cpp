@@ -59,7 +59,7 @@ double Clustering::Point::distanceTo(const Clustering::Point &inPoint) const
     double sum=0, diff=0;
     for(int x=0;x<dim;x++)
     {
-        diff=fabs(values[x]-inPoint.values[x]);
+        diff=values[x]-inPoint.values[x];
         sum += diff * diff;
     }
     return sqrt(sum);
