@@ -22,7 +22,7 @@ namespace Clustering
         timer=clock()-timer;
         std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
         //std::cout<<"Loaded the following points: "<<std::endl<<clusterArray[0]<<std::endl;
-        //clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
+        clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
         {
             clusterArray[x].setCentroid(*(initialCentroids[x]));//set each cluster's respective centroid from the generated centroids
