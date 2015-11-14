@@ -33,9 +33,9 @@ void kmeanstest()
     cin>>k;
     Clustering::KMeans clusteringClusterer(k,infile);
     cout<<"Iterating..."<<endl<<flush;
-    clusteringClusterer.iterateUntill(100);
-//    for(int x=0;x<25;x++)
-//        clusteringClusterer.iterateOnce();
+    //clusteringClusterer.iterateUntill(100);
+    for(int x=0;x<15;x++)
+        clusteringClusterer.iterateOnce();
     clusteringClusterer.outputPoints(outfile);
 }
 

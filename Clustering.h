@@ -5,14 +5,15 @@
 #ifndef CLUSTERING_CLUSTER_H
 #define CLUSTERING_CLUSTER_H
 
-#include "Point.h"
 #include <forward_list>
+#include "Point.h"
+
 
 namespace Clustering
 {
 
     static const char DELIM=',';
-    typedef Point *PointPtr;
+    typedef Point<Double> *PointPtr;
 
 
     class Cluster
@@ -20,9 +21,10 @@ namespace Clustering
         friend class KMeans;
         unsigned int size;
         unsigned int id;
-        std::forward_list<Point> points;
+        std::forward_list<Point<Double>> points;
         PointPtr __centroid;
         bool centroidValidity;
+
 
     public:
         Cluster();//default ctor.
@@ -32,16 +34,16 @@ namespace Clustering
         ~Cluster();
 
         // Set functions
-        void add(const Point &);
-        void remove(const Point &);
-        void setCentroid(const Point&);
+        void add(const Point<Double> &);
+        void remove(const Point<Double> &);
+        void setCentroid(const Point<Double>&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
         class Move
         {
         public:
-            Move(const Point &target,Cluster *from,Cluster *to){perform(target,from,to);};
+            Move(const Point<Double> &target,Cluster *from,Cluster *to){perform(target,from,to);};
         private:
-            void perform(const Point &target,Cluster *from,Cluster *to)
+            void perform(const Point<Double> &target,Cluster *from,Cluster *to)
             {
                 to->add(target);
                 from->remove(target);
@@ -51,7 +53,7 @@ namespace Clustering
 
         //getters
         const unsigned int getID(){return id;}
-        const Point& getCentroid(){return *__centroid;}
+        const Point<Double>& getCentroid(){return *__centroid;}
         const bool centrodValid(){return centroidValidity;}
         const unsigned long int getSize(){return size;}
         unsigned int getClusterEdges(){return size * (size - 1) / 2;}
@@ -77,16 +79,16 @@ namespace Clustering
         Cluster &operator+=(const Cluster &rhs); // union
         Cluster &operator-=(const Cluster &rhs); // (asymmetric) difference
 
-        Cluster &operator+=(const Point &rhs); // add point
-        Cluster &operator-=(const Point &rhs); // remove point
+        Cluster &operator+=(const Point<Double> &rhs); // add point
+        Cluster &operator-=(const Point<Double> &rhs); // remove point
 
         // Set-destructive operators (duplicate points in the space)
         // - Friends
         friend const Cluster operator+(const Cluster &lhs, const Cluster &rhs);
         friend const Cluster operator-(const Cluster &lhs, const Cluster &rhs);
 
-        friend const Cluster operator+(const Cluster &lhs, const Point &rhs);
-        friend const Cluster operator-(const Cluster &lhs, const Point &rhs);
+        friend const Cluster operator+(const Cluster &lhs, const Point<Double> &rhs);
+        friend const Cluster operator-(const Cluster &lhs, const Point<Double> &rhs);
 
     private:
         unsigned int newID(); //returns a unique ID each time it's called

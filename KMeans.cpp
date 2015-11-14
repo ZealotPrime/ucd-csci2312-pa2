@@ -39,11 +39,11 @@ namespace Clustering
         double intra=0,inter=0,oldscore;
         for(int x=0;x<k;x++)
         {
-            intra+=(clusterArray[x].intraClusterDistance())/k;//calc mean intracluster distance
+            intra+=(clusterArray[x].intraClusterDistance());//calc mean intracluster distance
         }
         for(int x=0;x<k-1;x++)
             for(int y=x+1;y<k;y++)
-                inter+=(interClusterDistance(clusterArray[x],clusterArray[y])/(k*(k-1)/2));//calc mean intercluster distance
+                inter+=interClusterDistance(clusterArray[x],clusterArray[y]);//calc mean intercluster distance
 
 
         oldscore=score;
