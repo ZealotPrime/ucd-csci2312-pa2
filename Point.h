@@ -11,84 +11,96 @@
 #include "Clustering.h"
 
 namespace Clustering {
+    //forward declarations of friend functions
     template <typename T,int dim> class Point;
+    template <typename T,int dim>Point<T,dim> &operator+=(Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>Point<T,dim> &operator+=(Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>Point<T,dim> &operator-=(Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>const Point<T,dim> operator+(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>const Point<T,dim> operator-(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator==(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator!=(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator<(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator>(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator<=(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>bool operator>=(const Point<T,dim> &, const Point<T,dim> &);
+    template <typename T,int dim>std::ostream &operator<<(std::ostream &, const Point<T,dim> &);
+    template <typename T,int dim>std::istream &operator>>(std::istream &, Clustering::Point<T,dim> &);
 
     template <typename T,int dim> class Point {
-        int dim;        // number of dimensions of the point
-         std::vector<double> values; // values of the point's dimensions
+         std::vector<T> values; // values of the point's dimensions
         unsigned int id;//this point's id number
 
     public:
         Point();
-        Point(int, double *);
+        Point(T *);
 
         // Big three: cpy ctor, overloaded operator=, dtor
-        Point(const Point &);
-        Point &operator=(const Point &);
+        Point(const Point<T,dim> &);
+        Point &operator=(const Point<T,dim> &);
         ~Point();
 
         // Accessors & mutators
         int getDims() const { return dim; }
-        void setValue(int, double);
-        double getValue(int) const;
+        void setValue(int, T);
+        T getValue(int) const;
 
         // Functions
-        double distanceTo(const Point &) const;
+        double distanceTo(const Point<T,dim> &) const;
 
         // Overloaded operators
 
         // Members
-        Point &operator*=(double);
-        Point &operator/=(double);
-        const Point operator*(double) const; // prevent (p1*2) = p2;
-        const Point operator/(double) const;
+        Point<T,dim> &operator*=(double);
+        Point<T,dim> &operator/=(double);
+        const Point<T,dim> operator*(double) const; // prevent (p1*2) = p2;
+        const Point<T,dim> operator/(double) const;
 
-        double &operator[](int index) { return values[index]; } // I got rid of the -1 here because I felt it was silly as only a programmer would ever use this
+        double &operator[](int index) { return values[index]; } //0 based array operator
 
         // Friends
-        friend Point &operator+=(Point &, const Point &);
-        friend Point &operator-=(Point &, const Point &);
-        friend const Point operator+(const Point &, const Point &);
-        friend const Point operator-(const Point &, const Point &);
+        friend Point<T,dim> &operator+= <>(Point<T,dim> &, const Point<T,dim> &);
+        friend Point<T,dim> &operator-= <>(Point<T,dim> &, const Point<T,dim> &);
+        friend const Point<T,dim> operator+ <>(const Point<T,dim> &, const Point<T,dim> &);
+        friend const Point<T,dim> operator- <>(const Point<T,dim> &, const Point<T,dim> &);
 
-        friend bool operator==(const Point &, const Point &);
-        friend bool operator!=(const Point &, const Point &);
+        friend bool operator== <>(const Point<T,dim> &, const Point<T,dim> &);
+        friend bool operator!= <>(const Point<T,dim> &, const Point<T,dim> &);
 
-        friend bool operator<(const Point &, const Point &);
-        friend bool operator>(const Point &, const Point &);
-        friend bool operator<=(const Point &, const Point &);
-        friend bool operator>=(const Point &, const Point &);
+        friend bool operator< <>(const Point<T,dim> &, const Point<T,dim> &);
+        friend bool operator> <>(const Point<T,dim> &, const Point<T,dim> &);
+        friend bool operator<= <>(const Point<T,dim> &, const Point<T,dim> &);
+        friend bool operator>= <>(const Point<T,dim> &, const Point<T,dim> &);
 
-        friend std::ostream &operator<<(std::ostream &, const Point &);
-        friend std::istream &operator>>(std::istream &, Point &);
+        friend std::ostream &operator<< <>(std::ostream &, const Point<T,dim> &);
+        friend std::istream &operator>> <>(std::istream &, Point<T,dim> &);
 
     private:
         static unsigned int newID();
     };
     template <typename T,int dim>
-    Clustering::Point::Point()
+    Clustering::Point<T,dim>::Point()
     {
-        this->dim=dim;
+        //this->dim=dim;
         values.resize(dim);
         id=newID();
         for(int x=0;x<dim;x++)
             values[x]=0;
     }
     template <typename T,int dim>
-    Clustering::Point::Point(int dimSize, double *inArray)
+    Clustering::Point<T,dim>::Point(T *inArray)
     {
-        dim=dimSize;
         id=newID();
         for(int x=0;x<dim;x++)
             values[x]=inArray[x];
     }
     template <typename T,int dim>
-    Clustering::Point::Point(const Clustering::Point &inPoint)
+    Clustering::Point<T,dim>::Point(const Clustering::Point<T,dim> &inPoint)
     {
         *this=inPoint;
     }
     template <typename T,int dim>
-    Clustering::Point &Clustering::Point::operator=(const Clustering::Point &inPoint)
+    Clustering::Point<T,dim>& Clustering::Point<T,dim>::operator=(const Clustering::Point<T,dim> &inPoint)
     {
         //values.resize(dim);
         values=inPoint.values;
@@ -96,23 +108,23 @@ namespace Clustering {
         return *this;
     }
     template <typename T,int dim>
-    Clustering::Point::~Point()
+    Clustering::Point<T,dim>::~Point()
     {
     }
     template <typename T,int dim>
-    void Clustering::Point::setValue(int index, double newVal)
+    void Clustering::Point<T,dim>::setValue(int index, T newVal)
     {
         values[index]=newVal;
     }
     template <typename T,int dim>
-    double Clustering::Point::getValue(int index) const
+    T Clustering::Point<T,dim>::getValue(int index) const
     {
         return values[index];
     }
     template <typename T,int dim>
-    double Clustering::Point::distanceTo(const Clustering::Point &inPoint) const
+    double Clustering::Point<T,dim>::distanceTo(const Clustering::Point<T,dim> &inPoint) const
     {
-        double sum=0, diff=0;
+        T sum=0, diff=0;
         for(int x=0;x<dim;x++)
         {
             diff=values[x]-inPoint.values[x];
@@ -121,84 +133,84 @@ namespace Clustering {
         return sqrt(sum);
     }
     template <typename T,int dim>
-    Clustering::Point &Clustering::Point::operator*=(double modifier)
+    Clustering::Point<T,dim> &Clustering::Point<T,dim>::operator*=(double modifier)
     {
         for(int x=0;x<dim;x++)
             values[x]*=modifier;
         return *this;
     }
     template <typename T,int dim>
-    Clustering::Point &Clustering::Point::operator/=(double modifier)
+    Clustering::Point<T,dim> &Clustering::Point<T,dim>::operator/=(double modifier)
     {
         for(int x=0;x<dim;x++)
             values[x]/=modifier;
         return *this;
     }
     template <typename T,int dim>
-    const Clustering::Point Clustering::Point::operator*(double modifier) const
+    const Clustering::Point<T,dim> Clustering::Point<T,dim>::operator*(double modifier) const
     {
-        Clustering::Point outPoint(*this);
+        Clustering::Point<T,dim> outPoint(*this);
         outPoint*=modifier;
         return outPoint;
     }
     template <typename T,int dim>
-    const Clustering::Point Clustering::Point::operator/(double modifier) const
+    const Clustering::Point<T,dim> Clustering::Point<T,dim>::operator/(double modifier) const
     {
-        Clustering::Point outPoint(*this);
+        Clustering::Point<T,dim> outPoint(*this);
         outPoint/=modifier;
         return outPoint;
     }
 
     template <typename T,int dim>
-    Clustering::Point &operator+=(Clustering::Point &lhs, const Clustering::Point &rhs)
+    Point<T,dim> &operator+=(Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
             lhs.values[x] += rhs.values[x];
         return lhs;
     }
     template <typename T,int dim>
-    Clustering::Point &operator-=(Clustering::Point &lhs, const Clustering::Point &rhs)
+    Clustering::Point<T,dim> &operator-=(Clustering::Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
             lhs.values[x] -= rhs.values[x];
         return lhs;
     }
     template <typename T,int dim>
-    const Clustering::Point operator+(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    const Clustering::Point<T,dim> operator+(const Clustering::Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        Clustering::Point outPoint(lhs);
-        for (int x = 0; x < rhs.dim; x++)
+        Clustering::Point<T,dim> outPoint(lhs);
+        for (int x = 0; x < dim; x++)
             outPoint.values[x] += rhs.values[x];
         return outPoint;
     }
     template <typename T,int dim>
-    const Clustering::Point operator-(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    const Clustering::Point<T,dim> operator-(const Clustering::Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        Clustering::Point outPoint(lhs);
-        for (int x = 0; x < rhs.dim; x++)
+        Clustering::Point<T,dim> outPoint(lhs);
+        for (int x = 0; x <dim; x++)
             outPoint.values[x] -= rhs.values[x];
         return outPoint;
     }
-
-    bool operator==(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator==(const Clustering::Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
             if (lhs.values[x] != rhs.values[x])
                 return false;
         return true;
     }
-
-    bool operator!=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator!=(const Clustering::Point<T,dim> &lhs, const Clustering::Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
             if (lhs.values[x] != rhs.values[x])
                 return true;
         return false;
     }
-
-    bool operator<(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator<(const Point<T,dim> &lhs, const Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
         {
             if (lhs.values[x] < rhs.values[x])
                 return true;
@@ -207,10 +219,10 @@ namespace Clustering {
         }
         return false;
     }
-
-    bool operator>(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator>(const Point<T,dim> &lhs, const Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
         {
             if (lhs.values[x] > rhs.values[x])
                 return true;
@@ -219,10 +231,10 @@ namespace Clustering {
         }
         return false;
     }
-
-    bool operator<=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator<=(const Point<T,dim> &lhs, const Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
         {
             if (lhs.values[x] < rhs.values[x])
                 return true;
@@ -231,10 +243,10 @@ namespace Clustering {
         }
         return true;
     }
-
-    bool operator>=(const Clustering::Point &lhs, const Clustering::Point &rhs)
+    template <typename T,int dim>
+    bool operator>=(const Point<T,dim> &lhs, const Point<T,dim> &rhs)
     {
-        for (int x = 0; x < rhs.dim; x++)
+        for (int x = 0; x < dim; x++)
         {
             if (lhs.values[x] > rhs.values[x])
                 return true;
@@ -243,20 +255,20 @@ namespace Clustering {
         }
         return true;
     }
-
-    std::ostream &operator<<(std::ostream &os, const Clustering::Point &inPoint)
+    template <typename T,int dim>
+    std::ostream &operator<<(std::ostream &os, const Point<T,dim> &inPoint)
     {
-        for (int x = 0; x < inPoint.dim; x++)
+        for (int x = 0; x < dim; x++)
         {
             os<<std::showpoint;
             os << inPoint.values[x];
-            if(x<inPoint.dim-1)
+            if(x<dim-1)
                 os<<",";
         }
         return os;
     }
-
-    std::istream &operator>>(std::istream &is, Clustering::Point &inPoint)
+    template <typename T,int dim>
+    std::istream &operator>>(std::istream &is, Clustering::Point<T,dim> &inPoint)
     {
         std::string worker;
 
@@ -269,7 +281,7 @@ namespace Clustering {
     }
 
     template <typename T,int dim>
-    unsigned int Point::newID()
+    unsigned int Point<T,dim>::newID()
     {
         static unsigned int id = 0;
         id++;

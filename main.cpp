@@ -24,14 +24,18 @@ int main() {
 
 void kmeanstest()
 {
-    int k;
+    //int k,dims;
 
     ifstream infile("/home/zealot/ClionProjects/outpoints.txt");
     ofstream outfile("/home/zealot/ClionProjects/kmeansoutput.txt");
 
-    cout<<"How many clusters?"<<endl;
-    cin>>k;
-    Clustering::KMeans clusteringClusterer(k,infile);
+//    cout<<"How many clusters?"<<endl;
+//    cin>>k;
+//
+//    cout<<"How many dimentions do they have?"<<endl;
+//    cin>>dims;
+
+    Clustering::KMeans<5,3> clusteringClusterer(infile);
     cout<<"Iterating..."<<endl<<flush;
     //clusteringClusterer.iterateUntill(100);
     for(int x=0;x<15;x++)
@@ -47,17 +51,17 @@ void randFileGen()
     ofstream outfile("/home/zealot/ClionProjects/outpoints.txt");
     cout<<"How many points to generate? "<<endl;
     cin>>numPoints;
-    cout<<"How many dimentions should they have?"<<endl;
-    cin>>numDims;
+//    cout<<"How many dimentions should they have?"<<endl;
+//    cin>>numDims;
     cout<<"max value?"<<endl;
     cin>>max;
-    Clustering::Point generatorPoint(numDims);
+    Clustering::Point<double,3> generatorPoint;
     cout<<"Generating...";
     cout<<flush;
     timer=clock();
     for(unsigned int x=0;x<numPoints;x++)
     {
-        for (unsigned int y = 0; y < numDims; y++)
+        for (unsigned int y = 0; y < 3; y++)
         {
             generatorPoint.setValue(y, (rand() % ((max * 2000)) / 1000.0)-max);
         }
@@ -68,89 +72,89 @@ void randFileGen()
     outfile.close();
 }
 
-void pointTester()
-{
-    Clustering::Point testPoint(3);
-    Clustering::Point testPoint2(3);
+//void pointTester()
+//{
+//    Clustering::Point testPoint(3);
+//    Clustering::Point testPoint2(3);
+//
+//    testPoint.setValue(0,1);
+//    testPoint.setValue(1,2);
+//    testPoint.setValue(2,3);
+//
+//    testPoint2.setValue(0,1);
+//    testPoint2.setValue(1,2);
+//    testPoint2.setValue(2,3);
+//
+//    cout<<"two equal points created"<<endl;
+//
+//    cout<<testPoint<<endl;//print test
+//    cout<<testPoint2<<endl;
+//
+//    cout<<endl<<"test for equality when equal"<<endl;
+//    if(testPoint==testPoint2)
+//        cout<<"Points are equal"<<endl;
+//    if(testPoint!=testPoint2)
+//        cout<<"Points are not equal"<<endl;
+//
+//    cout<<endl<<"point2 added to point 1"<<endl;
+//    testPoint+=testPoint2;
+//    cout<<testPoint<<endl;
+//    cout<<testPoint2<<endl;
+//
+//    cout<<endl<<"get value of testpoint[3]"<<endl;
+//    cout<<testPoint[3]<<endl;
+//
+//    cout<<endl<<"test for equality when not equal"<<endl;
+//    if(testPoint==testPoint2)
+//        cout<<"Points are equal"<<endl;
+//    if(testPoint!=testPoint2)
+//        cout<<"Points are not equal"<<endl;
+//
+//    cout<<endl<<"multiply then divide testpoint2 by 2"<<endl;
+//    testPoint2*=2;//test mult/div ops
+//    cout<<testPoint2<<endl;
+//    testPoint2/=2;
+//    cout<<testPoint2<<endl;
+//
+//    cout<<endl<<"test comparators when not equal"<<endl;
+//    if(testPoint>testPoint2)
+//        cout<<"Test point greater"<<endl;
+//    if(testPoint<testPoint2)
+//        cout<<"Test point 2 greater"<<endl;
+//    if(testPoint>=testPoint2)
+//        cout<<"Test point greater or equal"<<endl;
+//    if(testPoint<=testPoint2)
+//        cout<<"Test point 2 greater or equal"<<endl;
+//
+//    cout<<endl<<"make them equal again and test comparators again"<<endl;
+//    testPoint=testPoint2;
+//    if(testPoint>testPoint2)//test comparators when equal
+//        cout<<"Test point greater"<<endl;
+//    if(testPoint<testPoint2)
+//        cout<<"Test point 2 greater"<<endl;
+//    if(testPoint>=testPoint2)
+//        cout<<"Test point greater or equal"<<endl;
+//    if(testPoint<=testPoint2)
+//        cout<<"Test point 2 greater or equal"<<endl;
+//
+//    cout<<endl<<"Add them together :"<<testPoint+testPoint2<<endl;
+//    cout<<endl<<"subtract them :"<<testPoint-testPoint2<<endl;
+//
+//    //cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
+//    //cin>>testPoint2;
+//    //cout<<"point is now "<<testPoint2;
+//
+//    cout<<"Testing comparators again with new values"<<endl;
+//    if(testPoint>testPoint2)
+//        cout<<"Test point greater"<<endl;
+//    if(testPoint<testPoint2)
+//        cout<<"Test point 2 greater"<<endl;
+//    if(testPoint>=testPoint2)
+//        cout<<"Test point greater or equal"<<endl;
+//    if(testPoint<=testPoint2)
+//        cout<<"Test point 2 greater or equal"<<endl;
 
-    testPoint.setValue(0,1);
-    testPoint.setValue(1,2);
-    testPoint.setValue(2,3);
-
-    testPoint2.setValue(0,1);
-    testPoint2.setValue(1,2);
-    testPoint2.setValue(2,3);
-
-    cout<<"two equal points created"<<endl;
-
-    cout<<testPoint<<endl;//print test
-    cout<<testPoint2<<endl;
-
-    cout<<endl<<"test for equality when equal"<<endl;
-    if(testPoint==testPoint2)
-        cout<<"Points are equal"<<endl;
-    if(testPoint!=testPoint2)
-        cout<<"Points are not equal"<<endl;
-
-    cout<<endl<<"point2 added to point 1"<<endl;
-    testPoint+=testPoint2;
-    cout<<testPoint<<endl;
-    cout<<testPoint2<<endl;
-
-    cout<<endl<<"get value of testpoint[3]"<<endl;
-    cout<<testPoint[3]<<endl;
-
-    cout<<endl<<"test for equality when not equal"<<endl;
-    if(testPoint==testPoint2)
-        cout<<"Points are equal"<<endl;
-    if(testPoint!=testPoint2)
-        cout<<"Points are not equal"<<endl;
-
-    cout<<endl<<"multiply then divide testpoint2 by 2"<<endl;
-    testPoint2*=2;//test mult/div ops
-    cout<<testPoint2<<endl;
-    testPoint2/=2;
-    cout<<testPoint2<<endl;
-
-    cout<<endl<<"test comparators when not equal"<<endl;
-    if(testPoint>testPoint2)
-        cout<<"Test point greater"<<endl;
-    if(testPoint<testPoint2)
-        cout<<"Test point 2 greater"<<endl;
-    if(testPoint>=testPoint2)
-        cout<<"Test point greater or equal"<<endl;
-    if(testPoint<=testPoint2)
-        cout<<"Test point 2 greater or equal"<<endl;
-
-    cout<<endl<<"make them equal again and test comparators again"<<endl;
-    testPoint=testPoint2;
-    if(testPoint>testPoint2)//test comparators when equal
-        cout<<"Test point greater"<<endl;
-    if(testPoint<testPoint2)
-        cout<<"Test point 2 greater"<<endl;
-    if(testPoint>=testPoint2)
-        cout<<"Test point greater or equal"<<endl;
-    if(testPoint<=testPoint2)
-        cout<<"Test point 2 greater or equal"<<endl;
-
-    cout<<endl<<"Add them together :"<<testPoint+testPoint2<<endl;
-    cout<<endl<<"subtract them :"<<testPoint-testPoint2<<endl;
-
-    //cout<<"Now enter 3 new dim values for test point 2 to test steam extraction operator:"<<endl;
-    //cin>>testPoint2;
-    //cout<<"point is now "<<testPoint2;
-
-    cout<<"Testing comparators again with new values"<<endl;
-    if(testPoint>testPoint2)
-        cout<<"Test point greater"<<endl;
-    if(testPoint<testPoint2)
-        cout<<"Test point 2 greater"<<endl;
-    if(testPoint>=testPoint2)
-        cout<<"Test point greater or equal"<<endl;
-    if(testPoint<=testPoint2)
-        cout<<"Test point 2 greater or equal"<<endl;
-
-}//end point tester
+//}//end point tester
 
 //void clusterTester()
 //{
