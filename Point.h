@@ -13,6 +13,10 @@
 namespace Clustering {
     //forward declarations of friend functions
     template <typename T,int dim> class Point;
+
+//    template <typename T, int dim> struct mapKey;
+//    template <typename T, int dim> struct keyHash;
+
     template <typename T,int dim>Point<T,dim> &operator+=(Point<T,dim> &, const Point<T,dim> &);
     template <typename T,int dim>Point<T,dim> &operator+=(Point<T,dim> &, const Point<T,dim> &);
     template <typename T,int dim>Point<T,dim> &operator-=(Point<T,dim> &, const Point<T,dim> &);
@@ -44,6 +48,7 @@ namespace Clustering {
         int getDims() const { return dim; }
         void setValue(int, T);
         T getValue(int) const;
+        unsigned int getID(){return id;}
 
         // Functions
         double distanceTo(const Point<T,dim> &) const;
@@ -78,6 +83,44 @@ namespace Clustering {
     private:
         static unsigned int newID();
     };
+
+    //structure and functors for hash map
+    template <typename Type, int dimentions>
+    struct mapKey
+    {
+        Point<Type,dimentions> p1,p2;
+        mapKey(const Point<Type,dimentions> in1, Point<Type,dimentions> in2)
+        {
+            p1=in1;
+            p2=in2;
+        }
+    };
+
+    template <typename Type, int dimentions>
+    struct mapKeyHash
+    {
+        std::size_t operator ()(const mapKey<Type,dimentions>& key)const
+        {
+            unsigned int id1=key.p1.getID();
+            unsigned int id2=key.p2.getID();
+
+            if(id1>id2)
+                std::swap(id1,id2);
+            return std::hash<std::size_t>()((id1 + id2) * (id1 + id2 + 1) / 2 + id2);
+        }
+    };
+
+    template <typename Type, int dimentions>
+    struct mapKeyEquality
+    {
+        bool operator()(const mapKey<Type,dimentions>& lhs,const mapKey<Type,dimentions>& rhs)
+        {
+            return (lhs.p1.getId() == rhs.p1.getId() && lhs.p2.getId() == rhs.p2.getId())||(lhs.p1.getId() == rhs.p2.getId() && lhs.p2.getId() == rhs.p1.getId());
+        }
+    };
+
+
+
     template <typename T,int dim>
     Clustering::Point<T,dim>::Point()
     {

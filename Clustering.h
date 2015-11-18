@@ -6,6 +6,7 @@
 #define CLUSTERING_CLUSTER_H
 
 #include <forward_list>
+#include <unordered_map>
 #include <sstream>
 #include "Point.h"
 
@@ -31,12 +32,13 @@ namespace Clustering
 
     template <typename T, int dim>class Cluster
     {
-        template <int in,int valid>friend class KMeans;
+        template <int foo,int bar>friend class KMeans;
         unsigned int size;
         unsigned int id;
         std::forward_list<Point<T,dim>> points;
         Point<T,dim>* __centroid;
         bool centroidValidity;
+        //static std::unordered_map distances;
 
 
     public:
@@ -109,6 +111,9 @@ namespace Clustering
 
 
     };
+
+
+
 
     template <typename T, int dim>
     Cluster<T,dim>::Cluster(const Cluster<T,dim> &inCluster) {
