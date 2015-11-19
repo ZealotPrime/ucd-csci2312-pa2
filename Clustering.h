@@ -38,7 +38,7 @@ namespace Clustering
         std::forward_list<Point<T,dim>> points;
         Point<T,dim>* __centroid;
         bool centroidValidity;
-        //static std::unordered_map distances;
+        static std::unordered_map<mapKey ,double ,mapKeyHash ,mapKeyEquality> distances;
 
 
     public:
@@ -53,6 +53,7 @@ namespace Clustering
         void remove(const Point<T,dim> &);
         void setCentroid(const Point<T,dim>&);
         void setCentroidValidity(bool isValid){ centroidValidity =isValid;}
+        void populateMap();
         class Move
         {
         public:
@@ -92,7 +93,6 @@ namespace Clustering
         // - Members
         Cluster<T,dim> &operator+=(const Cluster<T,dim> &rhs); // union
         Cluster<T,dim> &operator-=(const Cluster<T,dim> &rhs); // (asymmetric) difference
-
         Cluster<T,dim> &operator+=(const Point<T,dim> &rhs); // add point
         Cluster<T,dim> &operator-=(const Point<T,dim> &rhs); // remove point
 
@@ -111,8 +111,8 @@ namespace Clustering
 
 
     };
-
-
+    template <typename T, int dim>
+    std::unordered_map<mapKey ,double ,mapKeyHash ,mapKeyEquality> Cluster<T,dim>::distances;
 
 
     template <typename T, int dim>
@@ -208,6 +208,7 @@ namespace Clustering
             return os;
         }
 
+        unsigned int temp;
         for(auto seeker=cluster.points.begin();seeker!=cluster.points.end();++seeker)
         {
             os << *seeker << " : " << cluster.id << std::endl;
@@ -232,10 +233,13 @@ namespace Clustering
 
         while (getline(istream, worker, '\n'))//gets lines from the stream, puts them into a string
         {
+
             workStream.str(worker);//makes the string into a stream to send to point
             workStream >> newPoint;//have it set data using the stream
             cluster.add(newPoint);
             workStream.clear();
+            newPoint.setID();//gets the temp point a new ID for the next time it's added
+
         }
 
         return istream;
@@ -446,6 +450,22 @@ namespace Clustering
     {
         unsigned int totalSize=c1.size+c2.size;
         return (totalSize*(totalSize-1)/2);
+    }
+
+    template <typename T, int dim>
+    void Cluster<T,dim>::populateMap()
+    {
+        for(auto outer=points.begin();outer!=points.end();++outer)
+        {
+            auto inner=outer;
+            for(++inner;inner!=points.end();++inner)
+            {
+                mapKey key(outer->getID(),inner->getID());
+                auto seek=distances.find(key);
+                if(seek==distances.end())
+                    distances[key]=inner->distanceTo(*outer);
+            }
+        }
     }
 
 }

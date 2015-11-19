@@ -1,10 +1,9 @@
 #include <iostream>
-#include "Point.h"
-#include "Clustering.h"
-#include "KMeans.h"
 #include <fstream>
 #include <random>
 #include <time.h>
+#include "KMeans.h"
+
 using namespace std;
 void pointTester();
 void clusterTester();
@@ -36,11 +35,14 @@ void kmeanstest()
 //    cin>>dims;
 
     Clustering::KMeans<5,3> clusteringClusterer(infile);
+    clock_t timer=clock();
     cout<<"Iterating..."<<endl<<flush;
     //clusteringClusterer.iterateUntill(100);
-    for(int x=0;x<15;x++)
+    for(int x=0;x<10;x++)
         clusteringClusterer.iterateOnce();
     clusteringClusterer.outputPoints(outfile);
+    timer=clock()-timer;
+    cout<<"All iterations took "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<endl;
 }
 
 void randFileGen()

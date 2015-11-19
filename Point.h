@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include "Clustering.h"
 
 namespace Clustering {
     //forward declarations of friend functions
@@ -49,6 +48,8 @@ namespace Clustering {
         void setValue(int, T);
         T getValue(int) const;
         unsigned int getID(){return id;}
+        void setID(){id=newID();} //changes the ID to allow a single temp point to be used for loading in the file
+
 
         // Functions
         double distanceTo(const Point<T,dim> &) const;
@@ -82,27 +83,26 @@ namespace Clustering {
 
     private:
         static unsigned int newID();
+
     };
 
     //structure and functors for hash map
-    template <typename Type, int dimentions>
     struct mapKey
     {
-        Point<Type,dimentions> p1,p2;
-        mapKey(const Point<Type,dimentions> in1, Point<Type,dimentions> in2)
+        unsigned int p1,p2;
+        mapKey(const unsigned int in1, const unsigned int in2)
         {
             p1=in1;
             p2=in2;
         }
     };
 
-    template <typename Type, int dimentions>
     struct mapKeyHash
     {
-        std::size_t operator ()(const mapKey<Type,dimentions>& key)const
+        std::size_t operator ()(const mapKey& key)const
         {
-            unsigned int id1=key.p1.getID();
-            unsigned int id2=key.p2.getID();
+            unsigned int id1=key.p1;
+            unsigned int id2=key.p2;
 
             if(id1>id2)
                 std::swap(id1,id2);
@@ -110,12 +110,11 @@ namespace Clustering {
         }
     };
 
-    template <typename Type, int dimentions>
     struct mapKeyEquality
     {
-        bool operator()(const mapKey<Type,dimentions>& lhs,const mapKey<Type,dimentions>& rhs)
+        bool operator()(const mapKey& lhs,const mapKey& rhs)const
         {
-            return (lhs.p1.getId() == rhs.p1.getId() && lhs.p2.getId() == rhs.p2.getId())||(lhs.p1.getId() == rhs.p2.getId() && lhs.p2.getId() == rhs.p1.getId());
+            return (lhs.p1 == rhs.p1 && lhs.p2 == rhs.p2)||(lhs.p1 == rhs.p2 && lhs.p2 == rhs.p1);
         }
     };
 

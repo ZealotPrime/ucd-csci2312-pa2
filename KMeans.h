@@ -40,6 +40,7 @@ namespace Clustering
         is>>clusterArray[0];//load teh dataz into master cluster
         timer=clock()-timer;
         std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
+        clusterArray[0].populateMap();//populate the hash map
         //std::cout<<"Loaded the following points: "<<std::endl<<clusterArray[0]<<std::endl;
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
