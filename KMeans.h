@@ -14,7 +14,6 @@ namespace Clustering
     private:
         Cluster<double,dim> *clusterArray;
         double score, scoreDiff;
-        //int k;
         unsigned long int numberOfIterations;
     public:
         KMeans(std::istream &is);
@@ -84,13 +83,13 @@ namespace Clustering
     }
 
     template<int k, int dim>
-    void KMeans<k,dim>::iterateOnce()
+    void KMeans<k,dim>::iterateOnce()//int k;
     {
         double tempDistance=0;
         auto seeker=clusterArray[0].points.begin(),trailer=clusterArray[0].points.begin();
         clock_t timer=clock();
         for (int containingCluster = 0; containingCluster < k; containingCluster++)//go through each cluster
-        {
+        {//int k;
             if(STATLEVEL>2)
                 clusterStats();
             for (seeker=clusterArray[containingCluster].points.begin(); seeker!=clusterArray[containingCluster].points.end();trailer=seeker++)//and each of it's points

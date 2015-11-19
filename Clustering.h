@@ -403,7 +403,7 @@ namespace Clustering
             ++inner;
             while(inner!=points.end())
             {
-                distance += outer->distanceTo(*inner) / edges;
+                distance += distances.at(mapKey(outer->getID(),inner->getID())) / edges;
                 ++inner;
             }
             ++outer;
@@ -422,7 +422,7 @@ namespace Clustering
         {
             while(right!=rhs.points.end())
             {
-                distance += (left->distanceTo(*right)) / edges;
+                distance += Cluster<T,dim>::distances.at(mapKey(left->getID(),right->getID()))/ edges;
                 ++right;
             }
             ++left;
