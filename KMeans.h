@@ -39,7 +39,11 @@ namespace Clustering
         is>>clusterArray[0];//load teh dataz into master cluster
         timer=clock()-timer;
         std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl<<"Successfully loaded "<<clusterArray[0].getSize()<<" points"<<std::endl;
+        timer=clock();
+        std::cout<<"Populating distance map..."<<std::flush;
         clusterArray[0].populateMap();//populate the hash map
+        timer=clock()-timer;
+        std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl;
         //std::cout<<"Loaded the following points: "<<std::endl<<clusterArray[0]<<std::endl;
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
@@ -60,11 +64,12 @@ namespace Clustering
         double intra=0,inter=0,oldscore;
         for(int x=0;x<k;x++)
         {
-            intra+=(clusterArray[x].intraClusterDistance());//calc mean intracluster distance
+            intra+=(clusterArray[x].intraClusterDistance())/k;//calc mean intracluster distance
         }
+        int divisor=k*(k-1);
         for(int x=0;x<k-1;x++)
             for(int y=x+1;y<k;y++)
-                inter+=interClusterDistance(clusterArray[x],clusterArray[y]);//calc mean intercluster distance
+                inter+=interClusterDistance(clusterArray[x],clusterArray[y])/divisor;//calc mean intercluster distance
 
 
         oldscore=score;
