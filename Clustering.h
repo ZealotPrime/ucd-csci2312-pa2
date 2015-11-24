@@ -112,7 +112,7 @@ namespace Clustering
 
     };
     template <typename T, int dim>
-    std::unordered_map<mapKey ,double ,mapKeyHash ,mapKeyEquality> Cluster<T,dim>::distances;
+    std::unordered_map<mapKey ,double ,mapKeyHash ,mapKeyEquality>Cluster<T,dim>::distances;
 
 
     template <typename T, int dim>
@@ -455,12 +455,15 @@ namespace Clustering
     template <typename T, int dim>
     void Cluster<T,dim>::populateMap()
     {
+        distances.reserve(size);
+        mapKey key(0,0);
         for(auto outer=points.begin();outer!=points.end();++outer)
         {
             auto inner=outer;
             for(++inner;inner!=points.end();++inner)
             {
-                mapKey key(outer->getID(),inner->getID());
+                key.p1=outer->getID();
+                key.p2=inner->getID();
                 auto seek=distances.find(key);
                 if(seek==distances.end())
                     distances[key]=inner->distanceTo(*outer);

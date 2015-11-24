@@ -43,7 +43,7 @@ namespace Clustering
         std::cout<<"Populating distance map..."<<std::flush;
         clusterArray[0].populateMap();//populate the hash map
         timer=clock()-timer;
-        std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::endl;
+        std::cout<<"done in "<<(double)timer/CLOCKS_PER_SEC<<" seconds"<<std::flush<<std::endl;
         //std::cout<<"Loaded the following points: "<<std::endl<<clusterArray[0]<<std::endl;
         clusterArray[0].pickPoints(k,initialCentroids);//get initial centroids from the dataset
         for(int x=0;x<k;x++)
